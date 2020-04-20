@@ -1,0 +1,39 @@
+{
+	"HurrevacSettings": "",
+	"HurrevacStormsURL":"", 
+	"HurrevacStormURL":"",
+	"HurrevacRHurr50Factor": 0.68,
+	"HurrevacRHurr64Factor": 0.77,
+	"HurrevacVmaxFactor": 0.9,
+	"HurrevacKnottoMphFactor": 1.15078,
+	"ValidWindSpeedMPHThresholdGreaterThanMin": 39.1,
+	"ValidWindSpeedMPHThresholdLessThanMax": 200,
+	"ValidCentralPressuremBarThresholdGreaterThanMin": 863,
+	"ValidCentralPressuremBarThresholdLessThanMax": 1013,
+	"jsonColumns": [
+		"advisoryId",
+		"stormId",
+		"number",
+		"dateTime",
+		"stormName",
+		"minimumPressure",
+		"speed",
+		"direction",
+		"centerLatitude",
+		"centerLongitude",
+		"currentForecast",
+		"futureForecasts"
+	],
+	"renameForecastColumns": {
+		"latitude": "centerLatitude",
+		"longitude": "centerLongitude",
+		"maxGusts": "MaxWindSpeed",
+		"hour": "dateTime"
+	},
+	"renameColumns": {
+		"": "",
+		"": "",
+		"": "",
+		"": ""
+	}
+}
