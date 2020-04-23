@@ -1,8 +1,8 @@
 {
 	"HurrevacSettings": "",
 	"Basins": ["al","ep"],
-	"HurrevacStormsURL":"https://hvx-data.hurrevac.com/hvx-api/v1/advisories/storms", 
-	"HurrevacStormURL":"https://hvx-data.hurrevac.com/hvx-api/v1/advisories/storm",
+	"HurrevacStormsURL":"", 
+	"HurrevacStormURL":"",
 	"HurrevacRHurr50Factor": 0.68,
 	"HurrevacRHurr64Factor": 0.77,
 	"HurrevacVmaxFactor": 0.9,
