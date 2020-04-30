@@ -1,5 +1,8 @@
 {
 	"HurrevacSettings": "",
+	"HazusServerName":"",
+	"HazusUserName":"",
+	"HazusPassword":"",
 	"Basins": ["al","ep"],
 	"HurrevacStormsURL":"", 
 	"HurrevacStormURL":"",
