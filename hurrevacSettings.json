@@ -1,19 +1,32 @@
 {
-	"HurrevacSettings": "",
+	"HurrevacSettings": "User will need to input server, user and password for hazus and urls for Hurrevac.",
 	"HazusServerName":"",
 	"HazusUserName":"",
 	"HazusPassword":"",
-	"Basins": ["al","ep"],
+	"BasinsDictionary": {"al":"Atlantic",
+						"cp":"Central Pacific",
+						"ep":"Eastern Pacific"},
+	"ShowStormTypes":{"Active":1, 
+                    	"Historical":1, 
+                    	"Exercise":0, 
+                    	"Simulated":0},
 	"HurrevacStormsURL":"", 
 	"HurrevacStormURL":"",
 	"HurrevacRHurr50Factor": 0.68,
 	"HurrevacRHurr64Factor": 0.77,
 	"HurrevacVmaxFactor": 0.9,
 	"HurrevacKnottoMphFactor": 1.15078,
-	"ValidWindSpeedMPHThresholdGreaterThanMin": 39.1,
-	"ValidWindSpeedMPHThresholdLessThanMax": 200,
-	"ValidCentralPressuremBarThresholdGreaterThanMin": 863,
-	"ValidCentralPressuremBarThresholdLessThanMax": 1013,
+	"ValidFieldThresholds": {
+		"RadiusToHurrWinds":{"min":0,"max":200},
+		"RadiusTo50KWinds":{"min":0,"max":400},
+		"RadiusTo34KWinds":{"min":0,"max":300},
+		"RadiusToMaxWinds":{"min":0,"max":93.1},
+		"CentralPressure":{"min":863,"max":1013},
+		"MaxWindSpeed":{"min":39.1,"max":200},
+		"TranslationSpeed":{"min":0,"max":89.4},
+		"ProfileParameter":{"min":0.5,"max":2.5}
+		},
+	"JSONComments": "Incoming units are in knots and nautical miles.",
 	"jsonColumns": [
 		"advisoryId",
 		"stormId",
@@ -34,10 +47,12 @@
 		"maxGusts": "MaxWindSpeed",
 		"hour": "dateTime"
 	},
-	"renameColumns": {
-		"": "",
-		"": "",
-		"": "",
-		"": ""
-	}
+	"WindForceThresholds": {
+		"T_mph":{"min":39,"max":57},
+		"50_mph":{"min":58,"max":73},
+		"H_mph":{"min":74,"max":200},
+		"T_knots":{"min":34,"max":49},
+		"50_knots":{"min":50,"max":63},
+		"H_knots":{"min":64,"max":174}
+		}
 }
