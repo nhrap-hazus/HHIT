@@ -54,7 +54,7 @@ def popupmsgNextSteps(msg):
     label.grid(row=1,column=0,padx=10,pady=10)
     try:
         #global img_NextSteps
-        img_NextSteps = tk.PhotoImage(file="./images/NextSteps.png")
+        img_NextSteps = tk.PhotoImage(file="./src/assets/images/NextSteps.png")
         imageLabel = tk.Label(popup, image=img_NextSteps)
         imageLabel.image = img_NextSteps
         imageLabel.grid(row=2,column=0,padx=10,pady=10)
@@ -62,7 +62,7 @@ def popupmsgNextSteps(msg):
         print(e)
     
     B1 = ttk.Button(popup, text="Okay", command = popup.destroy)
-    B1.grid(row=3,column=0,padx=10,pady=10)
+    B1.grid(row=3,column=0,padx=10,pady=20)
     popup.mainloop()
 
 def get_key(val, my_dict): 

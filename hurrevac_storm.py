@@ -112,11 +112,15 @@ def processStormJSON(inputJSON):
         df['PointIndex'] = np.nan
         
         '''TimeStep'''
-        df['dateTime'] = pd.to_datetime(df['dateTime'], unit='ms')
-        df['startDateTime'] = df['dateTime'].iloc[0] #get the first row's datatime value for new field
-        df['TimeStep'] = df['dateTime'] - df['startDateTime']
-        df['TimeStep'] = df['TimeStep'] / np.timedelta64(1,'h')
-        df['TimeStep'] = df['TimeStep'].apply(np.int64)
+        try:
+            df['dateTime'] = pd.to_datetime(df['dateTime'], unit='ms')
+            df['startDateTime'] = df['dateTime'].iloc[0] #get the first row's datatime value for new field
+            df['TimeStep'] = df['dateTime'] - df['startDateTime']
+            df['TimeStep'] = df['TimeStep'] / np.timedelta64(1,'h')
+            df['TimeStep'] = df['TimeStep'].apply(np.int64)
+        except Exception as e:
+            print('TimeStep')
+            print(e)
         
         '''Latitude'''
         df.rename(columns = {'centerLatitude':'Latitude'}, inplace=True)
@@ -129,6 +133,7 @@ def processStormJSON(inputJSON):
         #see also forecast section
         
         # '''TranslationSpeed'''
+        #commented out as this can be calculated by Hazus
         # #read speed in nautical miles directly for advisory points
         # def translationSpeedCalc(row):
         #     speedKnots = row['speed']
@@ -147,7 +152,11 @@ def processStormJSON(inputJSON):
             maxWindsMPH = maxWinds * HurrevacKnotToMphFactor
             maxWindsMPHHVF = maxWindsMPH * HurrevacVmaxFactor
             return maxWindsMPHHVF
-        df['MaxWindSpeed'] = df.apply(lambda row: MaxWindSpeedCalc(row), axis=1)
+        try:
+            df['MaxWindSpeed'] = df.apply(lambda row: MaxWindSpeedCalc(row), axis=1)
+        except Exception as e:
+            print('MaxWindSpeed')
+            print(e)
         
         '''Central Presssure'''
         df.rename(columns = {'minimumPressure':'CentralPressure'}, inplace=True)
@@ -162,7 +171,7 @@ def processStormJSON(inputJSON):
                 mean = sum(args) / len(args)
                 return mean
             except ZeroDivisionError:
-                print("Cannot divide by zero")
+                print('Cannot divide by zero')
                 return None
         
         def RadiusToXWinds(WindFields, windCat, RHurrXFactor):
@@ -186,9 +195,13 @@ def processStormJSON(inputJSON):
             return RadiusToXWinds(currentForecastDict, windCat, RHurrXFactor)
         
         #Caculate all wind radii...
-        df['RadiusTo34KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 34, 1), axis=1)
-        df['RadiusTo50KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 50, HurrevacRHurr50Factor), axis=1)
-        df['RadiusToHurrWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 64, HurrevacRHurr64Factor), axis=1)
+        try:
+            df['RadiusTo34KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 34, 1), axis=1)
+            df['RadiusTo50KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 50, HurrevacRHurr50Factor), axis=1)
+            df['RadiusToHurrWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 64, HurrevacRHurr64Factor), axis=1)
+        except Exception as e:
+            print('RadiusToXWinds')
+            print(e)
         
         #Zero out wind radii based on maxwindspeed...
         try:
@@ -207,7 +220,8 @@ def processStormJSON(inputJSON):
                 else:
                     pass
         except Exception as e:
-            print('Wind Radii Cleanup', e)
+            print('Wind Radii Cleanup')
+            print(e)
     
         '''NewCentralPressure'''
         #pass
@@ -241,7 +255,8 @@ def processStormJSON(inputJSON):
         try:
             df['RadiusToHurrWindsType'] = df.apply(lambda row: radiusToHurrWindsType(row), axis=1)
         except Exception as e:
-            print('RadiusToHurrWindsType issue', e)
+            print('RadiusToHurrWindsType issue')
+            print(e)
         
         '''NewRadiusToHurrWinds'''
         #pass
@@ -281,9 +296,13 @@ def processStormJSON(inputJSON):
             '''timeStep'''
             dfForecasts['dateTime'] = dfForecasts['dateTime'].astype('datetime64[ms]')
             dfForecasts['startDateTime'] = maxAdvisory['startDateTime']
-            dfForecasts['TimeStep'] = dfForecasts['dateTime'] - dfForecasts['startDateTime']
-            dfForecasts['TimeStep'] = dfForecasts['TimeStep'] / np.timedelta64(1,'h')
-            dfForecasts['TimeStep'] = dfForecasts['TimeStep'].apply(np.int64)
+            try:
+                dfForecasts['TimeStep'] = dfForecasts['dateTime'] - dfForecasts['startDateTime']
+                dfForecasts['TimeStep'] = dfForecasts['TimeStep'] / np.timedelta64(1,'h')
+                dfForecasts['TimeStep'] = dfForecasts['TimeStep'].apply(np.int64)
+            except Exception as e:
+                print('Forecast TimeStep')
+                print(e)
             dfForecasts.drop(columns=['startDateTime'], inplace=True)
         
             '''MaxWindSpeed'''
@@ -292,7 +311,11 @@ def processStormJSON(inputJSON):
                 maxWindsMPH = maxWinds * HurrevacKnotToMphFactor
                 maxWindsMPHHVF = maxWindsMPH * HurrevacVmaxFactor
                 return maxWindsMPHHVF
-            dfForecasts['MaxWindSpeed'] = df.apply(lambda row: MaxWindSpeedCalc(row), axis=1)
+            try:
+                dfForecasts['MaxWindSpeed'] = df.apply(lambda row: MaxWindSpeedCalc(row), axis=1)
+            except Exception as e:
+                print('Forecast MaxWindSpeed')
+                print(e)
         
             '''RadiusToXWinds'''
             dfForecasts['RadiusTo34KWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 34, 1), axis=1)
@@ -303,7 +326,8 @@ def processStormJSON(inputJSON):
             try:
                 dfForecasts['RadiusToHurrWindsType'] = dfForecasts.apply(lambda row: radiusToHurrWindsType(row), axis=1)
             except Exception as e:
-                print('forecast radiustohurrwindstyp', e)
+                print('Forecast radiustohurrwindstype')
+                print(e)
         
             '''Translation Speed'''
             dfForecasts['TranslationSpeed'] = 0
@@ -335,25 +359,29 @@ def processStormJSON(inputJSON):
             
             '''direction'''
             dfForecasts['direction'] = np.nan
-            #set default point...
-            latA = maxAdvisory['Latitude']
-            longA = maxAdvisory['Longitude']
-            for i in range(0, len(dfForecasts)):
-                latB = dfForecasts.loc[i, 'Latitude']
-                longB = dfForecasts.loc[i, 'Longitude']
-                #create point tuple...
-                pointA = (float(latA), float(longA))
-                pointB = (float(latB), float(longB))
-                compassBearing = calculate_initial_compass_bearing(pointA, pointB)
-                dfForecasts.loc[i, 'direction'] = compassBearing
-                #set beginning point to previous forecast point for next loop...
-                latA = latB
-                longA = longB
+            try:
+                #set default point...
+                latA = maxAdvisory['Latitude']
+                longA = maxAdvisory['Longitude']
+                for i in range(0, len(dfForecasts)):
+                    latB = dfForecasts.loc[i, 'Latitude']
+                    longB = dfForecasts.loc[i, 'Longitude']
+                    #create point tuple...
+                    pointA = (float(latA), float(longA))
+                    pointB = (float(latB), float(longB))
+                    compassBearing = calculate_initial_compass_bearing(pointA, pointB)
+                    dfForecasts.loc[i, 'direction'] = compassBearing
+                    #set beginning point to previous forecast point for next loop...
+                    latA = latB
+                    longA = longB
+            except Exception as e:
+                print('Forecast Direction:')
+                print(e)
             
             '''CentralPressure'''
+            pressureBar = 1013.0
+            dfForecasts['CentralPressure'] = np.nan
             try:
-                pressureBar = 1013.0
-                dfForecasts['CentralPressure'] = np.nan
                 #set default point...
                 cpA = maxAdvisory['CentralPressure']
                 mwsA = maxAdvisory['MaxWindSpeed']
@@ -370,7 +398,7 @@ def processStormJSON(inputJSON):
                         cpA = cpB
                         mwsA = mwsB
             except Exception as e:
-                print('forecast centralPressure:')
+                print('Forecast centralPressure:')
                 print(e)
             
             '''bInland'''
@@ -387,7 +415,11 @@ def processStormJSON(inputJSON):
                 except Exception as e:
                     print('Exception: forecast inland')
                     print(e)
-            dfForecasts['bInland'] = dfForecasts.apply(lambda row: TESTforecastInland(row), axis=1) 
+            try:
+                dfForecasts['bInland'] = dfForecasts.apply(lambda row: TESTforecastInland(row), axis=1) 
+            except Exception as e:
+                print('Forecast bInland')
+                print(e)
             
             
             
@@ -447,6 +479,7 @@ def processStormJSON(inputJSON):
                     previous = current
                     
             '''For all'''
+            '''MaxWindSpeed'''
             def ThresholdMaxWindSpeed(row):
                 '''this requires that maxwindspeed is in mph and has hurrevac vmax factor applied'''
                 MaxWindSpeedValue = row['MaxWindSpeed']
@@ -454,14 +487,23 @@ def processStormJSON(inputJSON):
                     return 40
                 else:
                     return MaxWindSpeedValue
-            df['MaxWindSpeed'] = df.apply(lambda row: ThresholdMaxWindSpeed(row), axis=1) 
-            
+            try:
+                df['MaxWindSpeed'] = df.apply(lambda row: ThresholdMaxWindSpeed(row), axis=1)
+            except Exception as e:
+                print('Threhold Check MaxWindSpeed')
+                print(e)
+
+            '''RadiusTo34KWinds'''
             def ThresholdRadiusTo34KWinds(row):
                 if row['MaxWindSpeed'] < 58 and row['RadiusTo34KWinds'] == 0:
                     return 30
                 else:
                     return row['RadiusTo34KWinds']
-            df['RadiusTo34KWinds'] = df.apply(lambda row: ThresholdRadiusTo34KWinds(row), axis=1) 
+            try:
+                df['RadiusTo34KWinds'] = df.apply(lambda row: ThresholdRadiusTo34KWinds(row), axis=1)
+            except Exception as e:
+                print('Threhold Check RadiusTo34KWinds')
+                print(e)
         
 
 
@@ -508,7 +550,7 @@ def processStormJSON(inputJSON):
     
     except Exception as e:
         print(e)
-        popupmsg('Error processing Storm JSON. Check your stormid.')
+        popupmsg('Error processing Storm JSON.')
     
             
 #Test some of the code above...

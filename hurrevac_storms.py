@@ -7,7 +7,7 @@ Requirements: Python 3.7, Anaconda3 64bit
 
 import tkinter as tk
 import tkinter.ttk as ttk
-import urllib
+import urllib.request
 import json
 import hurrevac_storm
 
