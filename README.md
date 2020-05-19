@@ -7,7 +7,7 @@ Hurrevac Load Tool
 
 The Hurravac Load Tool loads the Hurrevac Storm data of your choosing to your desktop Hazus database.
 
-To Use
+## To Use
 
 Must have Anaconda 3.X installed. Please read requirements
 
@@ -23,7 +23,7 @@ Must have Anaconda 3.X installed. Please read requirements
 
     Click the 'Load to Hazus' button to load your selected storm from the list or your entered storm id to your Hazus database.
 
-Requirements
+## Requirements
 
 The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be installed on your computer. Anaconda is a free software that automatically manages all Python packages required to run Hazus open source tools - including the Hazus Python package: https://fema-nhrap.s3.amazonaws.com/Hazus/Python/build/html/index.html
 
@@ -35,9 +35,9 @@ The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be install
         Add Anaconda to my PATH environment variable
         Register Anaconda as my default Python
 
-Documentation
+## Documentation
 
-Contact
+## Contact
 
 Issues can be reported through the repository on Github (https://github.com/nhrap-dev/Hurrevac)(!WILL NEED TO UPDATE THIS)
 
