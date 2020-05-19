@@ -7,6 +7,7 @@ Requirements: Python 3.7, Anaconda3 64bit
 
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import messagebox as messagebox
 import pandas as pd
 import json
 from sqlalchemy import create_engine
