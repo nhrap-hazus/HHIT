@@ -142,14 +142,15 @@ class Hazus_HurrEvac_HVX_ETL():
             elif StormId_StormEntry:
                 StormId = StormId_StormEntry
             else:
+                StormId = None
                 print("No storm id selected or entered.")
                 popupmsg("No storm id selected or entered.")
-            '''Creat a storm object, get storm web api json, process json to create dataframes, export to sql server'''
-            self.storm = hurrevac_storms.StormInfo()
-            self.storm.GetStormJSON(StormId)
-            self.storm.GetStormDataframe(self.storm.JSON)
-            hurrevac_main.ExportToHazus(self.storm.huScenarioName, self.storm.huScenario, self.storm.huStormTrack)
-            print('exportHazus',self.storm.huScenarioName)
+            if StormId:
+                '''Creat a storm object, get storm web api json, process json to create dataframes, export to sql server'''
+                self.storm = hurrevac_storms.StormInfo()
+                self.storm.GetStormJSON(StormId)
+                self.storm.GetStormDataframe(self.storm.JSON)
+                hurrevac_main.ExportToHazus(self.storm.huScenarioName, self.storm.huScenario, self.storm.huStormTrack)
         
         '''Get Storms values to prepopulate lists...'''
         self.storms = hurrevac_storms.StormsInfo()
