@@ -157,6 +157,7 @@ class Hazus_HurrEvac_HVX_ETL():
         self.stormTypes = tuple(self.storms.types)
         self.stormBasins = tuple(self.storms.basins)
         self.stormYears = tuple(self.storms.years)
+        # self.optimizeStormTrack = hurrevac_storms.GetOptimizeStormTrack()
         
         #Title
         self.LabelTitle = tk.Label(top)
@@ -262,16 +263,26 @@ class Hazus_HurrEvac_HVX_ETL():
         self.StormIdEntry.bind('<Key>', clearStormComboboxSelection)
         self.StormIdEntry.grid(row=1, column=0, padx=10, pady=10)
         
+        #Optimize Track checkbox
+        # self.OptimizeCheckbuttonState = tk.BooleanVar()
+        # self.OptimizeCheckbutton = tk.Checkbutton(top)
+        # self.OptimizeCheckbutton.configure(justify='left')
+        # self.OptimizeCheckbutton.configure(text='''Optimize Storm Track (Removes some first and last rows at minimum MaxWindSpeed.)''')
+        # self.OptimizeCheckbutton.configure(variable=self.OptimizeCheckbuttonState)
+        # if self.optimizeStormTrack == True:
+        #     self.OptimizeCheckbutton.select()
+        # self.OptimizeCheckbutton.grid(row=4, column=0, padx=10, pady=10, columnspan=2)
+        
         #Buttons
         self.LoadToHazusButton = tk.Button(top)
         self.LoadToHazusButton.configure(text='''Load to Hazus''')
         self.LoadToHazusButton.configure(command=exportHazus)
-        self.LoadToHazusButton.grid(row=4, column=0, padx=10, pady=10, sticky='e')
+        self.LoadToHazusButton.grid(row=5, column=0, padx=10, pady=10, sticky='e')
 
         self.QuitButton = tk.Button(top)
         self.QuitButton.configure(text='''Quit''')
         self.QuitButton.configure(command=root.destroy)
-        self.QuitButton.grid(row=4, column=1, padx=10, pady=10, sticky='w')
+        self.QuitButton.grid(row=5, column=1, padx=10, pady=10, sticky='w')
         
 if __name__ == '__main__':
     vp_start_gui()

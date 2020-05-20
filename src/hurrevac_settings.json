@@ -3,6 +3,7 @@
 	"HazusServerName":"DESKTOP-FVD6E70\\HAZUSPLUSSRVR",
 	"HazusUserName":"hazuspuser",
 	"HazusPassword":"Gohazusplus_02",
+	"OptimizeStormTrack":1,
 	"BasinsDictionary": {"al":"Atlantic",
 						"cp":"Central Pacific",
 						"ep":"Eastern Pacific"},

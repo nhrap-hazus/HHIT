@@ -83,6 +83,7 @@ def processStormJSON(inputJSON):
         HurrevacVmaxFactor = hurrevacSettings['HurrevacVmaxFactor']
         HurrevacKnotToMphFactor = hurrevacSettings['HurrevacKnottoMphFactor']
         jsonColumns = hurrevacSettings['jsonColumns']
+        OptimizeStormTrack = hurrevacSettings['OptimizeStormTrack']
         
         '''Set to false to not perform any threshold checks on advisory or forecast points'''
         thresholdCheck = True
@@ -525,6 +526,51 @@ def processStormJSON(inputJSON):
                         'bForecast',\
                         'RadiusToHurrWindsType']]
             
+        def optimizeTrack(df):
+            '''Drop all but two rows from the head and tail each where the maxwindspeed is the minimum value(or below)'''
+            try:
+                '''HEAD'''
+                dfRange = df.index
+                headRowCount = 0
+                for i in dfRange:  
+                    if df.loc[i, 'MaxWindSpeed'] <= 40:
+                        headRowCount += 1
+                    else:
+                        break
+                if headRowCount > 2:
+                    headRows = headRowCount - 2
+                    df.drop(df.head(headRows).index, inplace=True)
+                    print('headRow Count:', headRowCount)
+                else:
+                    print('headRow count <= 2 where max wind speed <= 40')
+                '''TAIL'''
+                dfRangeReversed = reversed(df.index)
+                tailRowCount = 0
+                for i in dfRangeReversed:  
+                    if df.loc[i, 'MaxWindSpeed'] <= 40:
+                        tailRowCount += 1
+                    else:
+                        break
+                if tailRowCount > 2:
+                    tailRows = tailRowCount - 2
+                    df.drop(df.tail(tailRows).index, inplace=True)
+                    print('tailRow count:', tailRowCount)
+                else:
+                    print('tailRow count <= 2 where max wind speed <= 40')
+                '''huStormTrackPtID'''
+                #assigns a number sequentially starting from row 0. The rows should already be sorted by time asc
+                df.drop(columns=['huStormTrackPtID'], inplace=True)
+                startNumber = 1
+                endNumber = len(df) + 1
+                df.insert(0, 'huStormTrackPtID', range(startNumber, endNumber))
+            except Exception as e:
+                print('optimizeTrack', e)
+        
+        if OptimizeStormTrack == 1:
+            try:
+                optimizeTrack(df_huStormTrack)
+            except Exception as e:
+                print('Optimize Track', e)
             
             
         '''CREATE huScenario TABLE...'''

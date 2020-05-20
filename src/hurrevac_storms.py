@@ -86,6 +86,11 @@ class StormsInfo:
             yearList.append(year)
         yearList.sort(reverse=True)
         self.years = tuple(yearList)
+        
+    # def GetOptimizeStormTrack(self):
+    #     with open("hurrevac_settings.json") as f:
+    #         hurrevacSettings = json.load(f)
+    #     self.optimizeStormTrack = hurrevacSettings['OptimizeStormTrack']
     
     def GetStormNames(self, stormTypes, basinLabel, year):
         '''Get basins code from label in settings.json'''
