@@ -1,4 +1,4 @@
-# Hurrevac Load Tool
+# Hazus Hurrevac Import Tool
 A class to extract, transform and load Hurrevac tropical storm data.
 Currently it is a stand alone tool but may be intended as a class in HazPy.
 This is a work in progress.
