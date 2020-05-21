@@ -93,9 +93,9 @@ def ExportToHazus(huScenarioName, huScenario, huStormTrack):
             popupmsgNextSteps(f'''Scenario "{huScenarioName}" is now available in Hazus.
                   
 Please build or open an existing region and:
-1.	Select “{huScenarioName}”
-2.	Choose “Edit”  so that Hazus will check and validate imported data.
-3.	Select Next and proceed through Hazus wizard until new scenario is saved.''')
+1. Select “{huScenarioName}”
+2. Choose “Edit”  so that Hazus will check and validate imported data.
+3. Select Next and proceed through Hazus wizard until new scenario is saved.''')
         except:
             popupmsg(f"Error loading {huScenarioName} into Hazus.")
 

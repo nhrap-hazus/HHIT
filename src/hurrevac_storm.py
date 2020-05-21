@@ -540,9 +540,6 @@ def processStormJSON(inputJSON):
                 if headRowCount > 2:
                     headRows = headRowCount - 2
                     df.drop(df.head(headRows).index, inplace=True)
-                    print('headRow Count:', headRowCount)
-                else:
-                    print('headRow count <= 2 where max wind speed <= 40')
                 '''TAIL'''
                 dfRangeReversed = reversed(df.index)
                 tailRowCount = 0
@@ -554,9 +551,6 @@ def processStormJSON(inputJSON):
                 if tailRowCount > 2:
                     tailRows = tailRowCount - 2
                     df.drop(df.tail(tailRows).index, inplace=True)
-                    print('tailRow count:', tailRowCount)
-                else:
-                    print('tailRow count <= 2 where max wind speed <= 40')
                 '''huStormTrackPtID'''
                 #assigns a number sequentially starting from row 0. The rows should already be sorted by time asc
                 df.drop(columns=['huStormTrackPtID'], inplace=True)

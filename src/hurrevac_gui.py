@@ -77,8 +77,9 @@ class Hazus_HurrEvac_HVX_ETL():
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
-        top.title("Hazus Hurrevac HVX ETL")
+        top.title("Hazus Hurrevac Import Tool")
         top.resizable(0,0)
+        #top.iconbitmap('./assets/images/HazusHIcon.ico') #Enabling iconbitmap opens a small window then the full app with widgets 
         
         def getStormNames(self):
             '''Get type, basin, year then get a tuple of those storms'''
@@ -125,7 +126,6 @@ class Hazus_HurrEvac_HVX_ETL():
         def exportHazus():
             '''get NameCombo selection (parse out the stormId from the stormLabel)'''
             try:
-                #StormId_NameCombo = re.findall(".+\[(.+)\]", self.StormCombobox.get())
                 StormId_NameCombo = self.StormComboboxVar.get()
                 StormId_NameCombo = re.findall(".+\[(.+)\]", StormId_NameCombo)
                 StormId_NameCombo = StormId_NameCombo[0]
@@ -157,25 +157,23 @@ class Hazus_HurrEvac_HVX_ETL():
         self.stormTypes = tuple(self.storms.types)
         self.stormBasins = tuple(self.storms.basins)
         self.stormYears = tuple(self.storms.years)
-        # self.optimizeStormTrack = hurrevac_storms.GetOptimizeStormTrack()
         
         #Title
-        self.LabelTitle = tk.Label(top)
-        self.LabelTitle.configure(text='''Hazus Hurrevac HVX Extract Transform Load Tool''')
-        self.LabelTitle.grid(row=0, column=0, padx=10, pady=10, columnspan=2)
+        self.LabelTitle = tk.Label(top, font=("Tahoma", "18", "bold"))
+        self.LabelTitle.configure(text='''Hazus Hurrevac Import Tool''')
+        self.LabelTitle.grid(row=0, column=0, padx=10, pady=10)
         
         #Select a Storm frame
-        self.LabelframeSelectStorm = tk.LabelFrame(top, labelanchor='n')
-        self.LabelframeSelectStorm.configure(text='''Select a Storm''')
-        self.LabelframeSelectStorm.grid(row=1, column=0, padx=10, pady=10, columnspan=2)
+        self.LabelframeSelectStorm = tk.LabelFrame(top, font=("Tahoma", "14", "bold"), labelanchor='n', borderwidth=4)
+        self.LabelframeSelectStorm.configure(text='''SELECT A STORM''')
+        self.LabelframeSelectStorm.grid(row=1, column=0, padx=10, pady=10)
         
         self.LabelframeSelectStormType = tk.LabelFrame(self.LabelframeSelectStorm, borderwidth=0)
         self.LabelframeSelectStormType.configure(text='''Choose one or more Storm Types to include in the Storms list:''')
-        self.LabelframeSelectStormType.grid(row=0, column=0, padx=10, pady=10, sticky='w')
+        self.LabelframeSelectStormType.grid(row=0, column=0, padx=10, pady=10)
 
         self.ActiveCheckbuttonState = tk.BooleanVar()
         self.ActiveCheckbutton = tk.Checkbutton(self.LabelframeSelectStormType)
-        self.ActiveCheckbutton.configure(justify='left')
         self.ActiveCheckbutton.configure(text='''Active''')
         self.ActiveCheckbutton.configure(variable=self.ActiveCheckbuttonState)
         self.ActiveCheckbutton.configure(command=updateStormNamesCheckBox)
@@ -183,7 +181,6 @@ class Hazus_HurrEvac_HVX_ETL():
         
         self.HistoricalCheckbuttonState = tk.BooleanVar()
         self.HistoricalCheckbutton = tk.Checkbutton(self.LabelframeSelectStormType)
-        self.HistoricalCheckbutton.configure(justify='left')
         self.HistoricalCheckbutton.configure(text='''Historical''')
         self.HistoricalCheckbutton.configure(variable=self.HistoricalCheckbuttonState)
         self.HistoricalCheckbutton.configure(command=updateStormNamesCheckBox)
@@ -191,7 +188,6 @@ class Hazus_HurrEvac_HVX_ETL():
         
         self.ExerciseCheckbuttonState = tk.BooleanVar()
         self.ExerciseCheckbutton = tk.Checkbutton(self.LabelframeSelectStormType)
-        self.ExerciseCheckbutton.configure(justify='left')
         self.ExerciseCheckbutton.configure(text='''Exercise''')
         self.ExerciseCheckbutton.configure(variable=self.ExerciseCheckbuttonState)
         self.ExerciseCheckbutton.configure(command=updateStormNamesCheckBox)
@@ -199,12 +195,12 @@ class Hazus_HurrEvac_HVX_ETL():
         
         self.SimulatedCheckbuttonState = tk.BooleanVar()
         self.SimulatedCheckbutton = tk.Checkbutton(self.LabelframeSelectStormType)
-        self.SimulatedCheckbutton.configure(justify='left')
         self.SimulatedCheckbutton.configure(text='''Simulated''')
         self.SimulatedCheckbutton.configure(variable=self.SimulatedCheckbuttonState)
         self.SimulatedCheckbutton.configure(command=updateStormNamesCheckBox)
         self.SimulatedCheckbutton.grid(row=0, column=3, padx=10, pady=10,)
         
+        '''set default checkbox settings from config file...'''
         checkButtonDefaultSettings(self.stormTypes)
         
         self.LabelframeSelectStormLists = tk.LabelFrame(self.LabelframeSelectStorm, borderwidth=0)
@@ -226,7 +222,7 @@ class Hazus_HurrEvac_HVX_ETL():
         self.YearCombobox.bind('<<ComboboxSelected>>', updateStormNames)
         self.YearCombobox.grid(row=0, column=1, padx=10, pady=10)
         
-        self.StormCombobox = ttk.Combobox(self.LabelframeSelectStormLists, width=30)
+        self.StormCombobox = ttk.Combobox(self.LabelframeSelectStormLists, width=35)
         self.StormComboboxVar = tk.StringVar()
         self.StormCombobox.configure(textvariable=self.StormComboboxVar)
         self.StormCombobox.configure(values=self.StormComboboxVar)
@@ -243,18 +239,18 @@ class Hazus_HurrEvac_HVX_ETL():
         self.LabelInfoText.grid(row=3, column=0, padx=10, pady=10)
         
         #OR label
-        self.LabelOR = tk.Label(top)
+        self.LabelOR = tk.Label(top, font=("Tahoma", "14", "bold"))
         self.LabelOR.configure(text='''OR''')
         self.LabelOR.grid(row=2, column=0, padx=10, pady=10, columnspan=2)
         
         #Enter a Storm ID Frame
-        self.LabelframeEnterStorm = tk.LabelFrame(top, labelanchor='n')
-        self.LabelframeEnterStorm.configure(text='''Enter a Storm ID''')
-        self.LabelframeEnterStorm.grid(row=3, column=0, padx=10, pady=10, columnspan=2)
+        self.LabelframeEnterStorm = tk.LabelFrame(top, font=("Tahoma", "14", "bold"), labelanchor='n', borderwidth=4)
+        self.LabelframeEnterStorm.configure(text='''ENTER A STORM ID''')
+        self.LabelframeEnterStorm.grid(row=3, column=0, padx=10, pady=10)
         
         self.LabelEnterStormID = tk.Label(self.LabelframeEnterStorm,)
         self.LabelEnterStormID.configure(text='''If you know the Storm's Hurrevac HVX ID (I.E. "al012020"), enter it here and click "Load to Hazus":''')
-        self.LabelEnterStormID.grid(row=0, column=0, padx=10, pady=10, sticky='w')
+        self.LabelEnterStormID.grid(row=0, column=0, padx=10, pady=10)
                                 
         self.StormIdEntry = tk.Entry(self.LabelframeEnterStorm, width=10)
         self.StormIdEntryVar = tk.StringVar()
@@ -263,26 +259,19 @@ class Hazus_HurrEvac_HVX_ETL():
         self.StormIdEntry.bind('<Key>', clearStormComboboxSelection)
         self.StormIdEntry.grid(row=1, column=0, padx=10, pady=10)
         
-        #Optimize Track checkbox
-        # self.OptimizeCheckbuttonState = tk.BooleanVar()
-        # self.OptimizeCheckbutton = tk.Checkbutton(top)
-        # self.OptimizeCheckbutton.configure(justify='left')
-        # self.OptimizeCheckbutton.configure(text='''Optimize Storm Track (Removes some first and last rows at minimum MaxWindSpeed.)''')
-        # self.OptimizeCheckbutton.configure(variable=self.OptimizeCheckbuttonState)
-        # if self.optimizeStormTrack == True:
-        #     self.OptimizeCheckbutton.select()
-        # self.OptimizeCheckbutton.grid(row=4, column=0, padx=10, pady=10, columnspan=2)
-        
         #Buttons
-        self.LoadToHazusButton = tk.Button(top)
+        self.LabelframeButtons = tk.LabelFrame(top, borderwidth=0)
+        self.LabelframeButtons.grid(row=4, column=0, padx=10, pady=10)
+        
+        self.LoadToHazusButton = tk.Button(self.LabelframeButtons)
         self.LoadToHazusButton.configure(text='''Load to Hazus''')
         self.LoadToHazusButton.configure(command=exportHazus)
-        self.LoadToHazusButton.grid(row=5, column=0, padx=10, pady=10, sticky='e')
+        self.LoadToHazusButton.grid(row=0, column=0, padx=10, pady=10, sticky='e')
 
-        self.QuitButton = tk.Button(top)
+        self.QuitButton = tk.Button(self.LabelframeButtons)
         self.QuitButton.configure(text='''Quit''')
         self.QuitButton.configure(command=root.destroy)
-        self.QuitButton.grid(row=5, column=1, padx=10, pady=10, sticky='w')
+        self.QuitButton.grid(row=0, column=1, padx=10, pady=10, sticky='w')
         
 if __name__ == '__main__':
     vp_start_gui()
