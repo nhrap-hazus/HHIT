@@ -205,24 +205,25 @@ def processStormJSON(inputJSON):
             print(e)
         
         #Zero out wind radii based on maxwindspeed...
-        try:
-            for i in range(0, len(df)):
-                '''this requires that maxwindspeed is in mph and has hurrevac vmax factor applied'''
-                CurrentMaxWindSpeed = df.loc[i, 'MaxWindSpeed']
-                if CurrentMaxWindSpeed <= 57:
-                    df.loc[i, 'RadiusTo50KWinds'] = 0
-                    df.loc[i, 'RadiusToHurrWinds'] = 0
-                elif CurrentMaxWindSpeed > 57 and CurrentMaxWindSpeed < 74:
-                    df.loc[i, 'RadiusTo34KWinds'] = 0
-                    df.loc[i, 'RadiusToHurrWinds'] = 0
-                elif CurrentMaxWindSpeed >= 74:
-                    df.loc[i, 'RadiusTo34KWinds'] = 0
-                    df.loc[i, 'RadiusTo50KWinds'] = 0
-                else:
-                    pass
-        except Exception as e:
-            print('Wind Radii Cleanup')
-            print(e)
+        #Moved to after appending forecast points
+        # try:
+        #     for i in range(0, len(df)):
+        #         '''this requires that maxwindspeed is in mph and has hurrevac vmax factor applied'''
+        #         CurrentMaxWindSpeed = df.loc[i, 'MaxWindSpeed']
+        #         if CurrentMaxWindSpeed <= 57:
+        #             df.loc[i, 'RadiusTo50KWinds'] = 0
+        #             df.loc[i, 'RadiusToHurrWinds'] = 0
+        #         elif CurrentMaxWindSpeed > 57 and CurrentMaxWindSpeed < 74:
+        #             df.loc[i, 'RadiusTo34KWinds'] = 0
+        #             df.loc[i, 'RadiusToHurrWinds'] = 0
+        #         elif CurrentMaxWindSpeed >= 74:
+        #             df.loc[i, 'RadiusTo34KWinds'] = 0
+        #             df.loc[i, 'RadiusTo50KWinds'] = 0
+        #         else:
+        #             pass
+        # except Exception as e:
+        #     print('Wind Radii Cleanup')
+        #     print(e)
     
         '''NewCentralPressure'''
         #pass
@@ -454,6 +455,26 @@ def processStormJSON(inputJSON):
             
             
         '''THRESHOLD CHECKS AND DATA CONDITIONING...'''
+        #Zero out wind radii based on maxwindspeed...
+        try:
+            for i in range(0, len(df)):
+                '''this requires that maxwindspeed is in mph and has hurrevac vmax factor applied'''
+                CurrentMaxWindSpeed = df.loc[i, 'MaxWindSpeed']
+                if CurrentMaxWindSpeed <= 57:
+                    df.loc[i, 'RadiusTo50KWinds'] = 0
+                    df.loc[i, 'RadiusToHurrWinds'] = 0
+                elif CurrentMaxWindSpeed > 57 and CurrentMaxWindSpeed < 74:
+                    df.loc[i, 'RadiusTo34KWinds'] = 0
+                    df.loc[i, 'RadiusToHurrWinds'] = 0
+                elif CurrentMaxWindSpeed >= 74:
+                    df.loc[i, 'RadiusTo34KWinds'] = 0
+                    df.loc[i, 'RadiusTo50KWinds'] = 0
+                else:
+                    pass
+        except Exception as e:
+            print('Wind Radii Cleanup')
+            print(e)
+        
         if thresholdCheck:
             '''If lat,long is 0,0; delete the row'''
             df = df.loc[(df['Latitude'] != 0) & (df['Longitude'] != 0)]            
@@ -524,7 +545,7 @@ def processStormJSON(inputJSON):
                         'RadiusTo34KWinds',\
                         'bInland',\
                         'bForecast',\
-                        'RadiusToHurrWindsType']]
+                        'RadiusToHurrWindsType']].copy()
             
         def optimizeTrack(df):
             '''Drop all but two rows from the head and tail each where the maxwindspeed is the minimum value(or below)'''
