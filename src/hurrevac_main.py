@@ -12,6 +12,13 @@ import pandas as pd
 import json
 from sqlalchemy import create_engine
 
+try:
+    with open("hurrevac_settings.json") as f:
+        hurrevacSettings = json.load(f)
+except:
+    with open("./src/hurrevac_settings.json") as f:
+        hurrevacSettings = json.load(f)
+
 def popupmsg(msg):
     tk.messagebox.showinfo(message=msg)
 
@@ -34,7 +41,7 @@ def popupmsgNextSteps(msg):
     label.grid(row=1,column=0,padx=10,pady=10)
     try:
         #global img_NextSteps
-        img_NextSteps = tk.PhotoImage(file="./assets/images/NextSteps.png")
+        img_NextSteps = tk.PhotoImage(file="./src/assets/images/NextSteps.png")
         imageLabel = tk.Label(popup, image=img_NextSteps)
         imageLabel.image = img_NextSteps
         imageLabel.grid(row=2,column=0,padx=10,pady=10)
@@ -58,8 +65,6 @@ def ExportToJSON(inputDataFrame, outputPath):
     df.to_json(outputPath)
 
 def CheckScenarioName(huScenarioName):
-    with open("hurrevac_settings.json") as f:
-        hurrevacSettings = json.load(f)
     server = hurrevacSettings['HazusServerName']
     userName = hurrevacSettings['HazusUserName']
     password = hurrevacSettings['HazusPassword']
@@ -74,8 +79,6 @@ def CheckScenarioName(huScenarioName):
         return False
 
 def ExportToHazus(huScenarioName, huScenario, huStormTrack):
-    with open("hurrevac_settings.json") as f:
-        hurrevacSettings = json.load(f)
     server = hurrevacSettings['HazusServerName']
     userName = hurrevacSettings['HazusUserName']
     password = hurrevacSettings['HazusPassword']
@@ -94,7 +97,7 @@ def ExportToHazus(huScenarioName, huScenario, huStormTrack):
                   
 Please build or open an existing region and:
 1. Select “{huScenarioName}”
-2. Choose “Edit”  so that Hazus will check and validate imported data.
+2. Choose “Edit” so that Hazus will check and validate imported data.
 3. Select Next and proceed through Hazus wizard until new scenario is saved.''')
         except:
             popupmsg(f"Error loading {huScenarioName} into Hazus.")
