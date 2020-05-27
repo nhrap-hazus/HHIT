@@ -11,6 +11,13 @@ import urllib.request
 import json
 import hurrevac_storm
 
+try:
+    with open("hurrevac_settings.json") as f:
+        hurrevacSettings = json.load(f)
+except:
+    with open("./src/hurrevac_settings.json") as f:
+        hurrevacSettings = json.load(f)
+
 def popupmsg(msg):
     NORM_FONT= ("Tahoma", 12)
     popup = tk.Toplevel()
@@ -44,8 +51,6 @@ class StormsInfo:
         self.GetStormsBasins()
     
     def GetStormsJSON(self):
-        with open("hurrevac_settings.json") as f:
-            hurrevacSettings = json.load(f)
         openUrl = urllib.request.urlopen(hurrevacSettings['HurrevacStormsURL'])
         
         if(openUrl.getcode()==200):
@@ -57,8 +62,6 @@ class StormsInfo:
             
     def GetStormsTypes(self):
         #working with json
-        with open("hurrevac_settings.json") as f:
-            hurrevacSettings = json.load(f)
         StormTypes = hurrevacSettings['ShowStormTypes']
         StormTypesList = []
         for key in StormTypes.keys():
@@ -69,8 +72,6 @@ class StormsInfo:
 
     def GetStormsBasins(self):
         #working with json
-        with open("hurrevac_settings.json") as f:
-            hurrevacSettings = json.load(f)
         StormBasins = hurrevacSettings['BasinsDictionary']
         StormBasinsLabels = list(StormBasins.values())
         self.basins = tuple(StormBasinsLabels)
@@ -94,8 +95,6 @@ class StormsInfo:
     
     def GetStormNames(self, stormTypes, basinLabel, year):
         '''Get basins code from label in settings.json'''
-        with open("hurrevac_settings.json") as f:
-            hurrevacSettings = json.load(f)
         StormBasins = hurrevacSettings['BasinsDictionary']
         basinCode = get_key(basinLabel, StormBasins)
         #working with json
@@ -151,8 +150,6 @@ class StormInfo:
         self.Id = StormId
         #from internet
         #attribute and used as input to GetStormDataframe
-        with open("hurrevac_settings.json") as f:
-            hurrevacSettings = json.load(f)
         url = hurrevacSettings['HurrevacStormURL'] + "/" + StormId
         openUrl = urllib.request.urlopen(url)
         if(openUrl.getcode()==200):
