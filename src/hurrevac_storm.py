@@ -13,6 +13,13 @@ import json
 import math
 from math import radians, cos, sin, asin, sqrt 
 
+try:
+    with open("hurrevac_settings.json") as f:
+        hurrevacSettings = json.load(f)
+except:
+    with open("./src/hurrevac_settings.json") as f:
+        hurrevacSettings = json.load(f)
+
 def popupmsg(msg):
     NORM_FONT= ("Tahoma", 12)
     popup = tk.Toplevel()
@@ -76,8 +83,6 @@ def processStormJSON(inputJSON):
             return compass_bearing
         
         '''Load variables from the settings file'''
-        with open("hurrevac_settings.json") as f:
-            hurrevacSettings = json.load(f)
         HurrevacRHurr50Factor = hurrevacSettings['HurrevacRHurr50Factor']
         HurrevacRHurr64Factor = hurrevacSettings['HurrevacRHurr64Factor']
         HurrevacVmaxFactor = hurrevacSettings['HurrevacVmaxFactor']
