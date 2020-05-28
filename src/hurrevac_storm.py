@@ -83,6 +83,7 @@ def processStormJSON(inputJSON):
             return compass_bearing
         
         '''Load variables from the settings file'''
+        HurrevacRHurr34Factor = hurrevacSettings['HurrevacRHurr34Factor']
         HurrevacRHurr50Factor = hurrevacSettings['HurrevacRHurr50Factor']
         HurrevacRHurr64Factor = hurrevacSettings['HurrevacRHurr64Factor']
         HurrevacVmaxFactor = hurrevacSettings['HurrevacVmaxFactor']
@@ -153,6 +154,7 @@ def processStormJSON(inputJSON):
         
         '''MaxWindSpeed'''
         def MaxWindSpeedCalc(row):
+            '''input must be in nautical miles'''
             currentForecastDict = row['currentForecast']
             maxWinds = currentForecastDict['maxWinds']
             maxWindsMPH = maxWinds * HurrevacKnotToMphFactor
@@ -171,16 +173,47 @@ def processStormJSON(inputJSON):
         '''ProfileParameter'''
         #pass
         
-        '''RadiusToXWinds'''        
-        def Mean_(*args):
-            try:
-                mean = sum(args) / len(args)
-                return mean
-            except ZeroDivisionError:
-                print('Cannot divide by zero')
-                return None
+        # '''RadiusToXWinds (mean)'''        
+        # def Mean_(*args):
+        #     try:
+        #         mean = sum(args) / len(args)
+        #         return mean
+        #     except ZeroDivisionError:
+        #         print('Cannot divide by zero')
+        #         return None
         
+        # def RadiusToXWinds(WindFields, windCat, RHurrXFactor):
+        #     if len(WindFields['windFields']) > 0:
+        #         windCats = []
+        #         for x in WindFields['windFields']:
+        #             windCats.append(int(x['windSpeed']))
+        #         if windCat in windCats:
+        #             for x in WindFields['windFields']:
+        #                 if int(x['windSpeed']) == windCat:
+        #                     radiiMean = Mean_(x['extent']['northEast'], x['extent']['southEast'], x['extent']['northWest'], x['extent']['southWest'])
+        #                     value = (radiiMean * HurrevacKnotToMphFactor) * RHurrXFactor
+        #                     return value         
+        #         else:
+        #             return 0.0
+        #     else:
+        #         return 0.0
+        
+        # def AdvisoryPointRadiusToXWinds(row, windCat, RHurrXFactor):
+        #     currentForecastDict = row['currentForecast']
+        #     return RadiusToXWinds(currentForecastDict, windCat, RHurrXFactor)
+        
+        #Caculate all wind radii...
+        # try:
+        #     df['RadiusTo34KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 34, 1), axis=1)
+        #     df['RadiusTo50KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 50, HurrevacRHurr50Factor), axis=1)
+        #     df['RadiusToHurrWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 64, HurrevacRHurr64Factor), axis=1)
+        # except Exception as e:
+        #     print('RadiusToXWinds')
+        #     print(e)
+            
+        '''RadiusToXWinds (Max, regression)'''
         def RadiusToXWinds(WindFields, windCat, RHurrXFactor):
+            '''input windspeed radii distance must be in nautical miles'''
             if len(WindFields['windFields']) > 0:
                 windCats = []
                 for x in WindFields['windFields']:
@@ -188,21 +221,28 @@ def processStormJSON(inputJSON):
                 if windCat in windCats:
                     for x in WindFields['windFields']:
                         if int(x['windSpeed']) == windCat:
-                            radiiMean = Mean_(x['extent']['northEast'], x['extent']['southEast'], x['extent']['northWest'], x['extent']['southWest'])
-                            value = (radiiMean * HurrevacKnotToMphFactor) * RHurrXFactor
-                            return value         
+                            radiiMax = max(x['extent']['northEast'], x['extent']['southEast'], x['extent']['northWest'], x['extent']['southWest'])
+                            # if windCat in (34, 50):
+                            #     regressionValue = 0.8996 * radiiMax - 0.5031
+                            # elif windCat in (64):
+                            #     regressionValue = 0.9472 * radiiMax - 0.277
+                            # if regressionValue < 0:
+                            #     regressionValue = 0
+                            # value = (regressionValue * HurrevacKnotToMphFactor) * RHurrXFactor
+                            value = (radiiMax * HurrevacKnotToMphFactor) * RHurrXFactor
+                            return value
                 else:
                     return 0.0
             else:
                 return 0.0
-        
+                
         def AdvisoryPointRadiusToXWinds(row, windCat, RHurrXFactor):
             currentForecastDict = row['currentForecast']
             return RadiusToXWinds(currentForecastDict, windCat, RHurrXFactor)
         
         #Caculate all wind radii...
         try:
-            df['RadiusTo34KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 34, 1), axis=1)
+            df['RadiusTo34KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 34, HurrevacRHurr34Factor), axis=1)
             df['RadiusTo50KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 50, HurrevacRHurr50Factor), axis=1)
             df['RadiusToHurrWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 64, HurrevacRHurr64Factor), axis=1)
         except Exception as e:
@@ -325,7 +365,7 @@ def processStormJSON(inputJSON):
                 print(e)
         
             '''RadiusToXWinds'''
-            dfForecasts['RadiusTo34KWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 34, 1), axis=1)
+            dfForecasts['RadiusTo34KWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 34, HurrevacRHurr34Factor), axis=1)
             dfForecasts['RadiusTo50KWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 50, HurrevacRHurr50Factor), axis=1)
             dfForecasts['RadiusToHurrWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 64, HurrevacRHurr64Factor), axis=1)
             
