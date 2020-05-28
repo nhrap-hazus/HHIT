@@ -13,6 +13,7 @@
                     	"Simulated":0},
 	"HurrevacStormsURL":"https://hvx.hurrevac.com/hvx-api/v1/advisories/storms", 
 	"HurrevacStormURL":"https://hvx.hurrevac.com/hvx-api/v1/advisories/storm",
+	"HurrevacRHurr34Factor": 0.68,
 	"HurrevacRHurr50Factor": 0.68,
 	"HurrevacRHurr64Factor": 0.77,
 	"HurrevacVmaxFactor": 0.9,
