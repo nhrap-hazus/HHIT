@@ -11,7 +11,9 @@ import pandas as pd
 import numpy as np
 import json
 import math
-from math import radians, cos, sin, asin, sqrt 
+from math import radians, cos, sin, asin, sqrt
+import geopandas
+from geopandas.tools import sjoin
 
 try:
     with open("hurrevac_settings.json") as f:
@@ -448,25 +450,26 @@ def processStormJSON(inputJSON):
                 print('Forecast centralPressure:')
                 print(e)
             
-            '''bInland'''
-            def TESTforecastInland(row):
-                try:
-                    status = row['status']
-                    if status:
-                        if 'inland' in status.lower():
-                            return 1
-                        else:
-                            return 0
-                    else:
-                        return 0
-                except Exception as e:
-                    print('Exception: forecast inland')
-                    print(e)
-            try:
-                dfForecasts['bInland'] = dfForecasts.apply(lambda row: TESTforecastInland(row), axis=1) 
-            except Exception as e:
-                print('Forecast bInland')
-                print(e)
+            '''bInland Status method'''
+            dfForecasts['bInland'] = 0
+            # def TESTforecastInland(row):
+            #     try:
+            #         status = row['status']
+            #         if status:
+            #             if 'inland' in status.lower():
+            #                 return 1
+            #             else:
+            #                 return 0
+            #         else:
+            #             return 0
+            #     except Exception as e:
+            #         print('Exception: forecast inland')
+            #         print(e)
+            # try:
+            #     dfForecasts['bInland'] = dfForecasts.apply(lambda row: TESTforecastInland(row), axis=1) 
+            # except Exception as e:
+            #     print('Forecast bInland')
+            #     print(e)
             
             
             
@@ -500,6 +503,31 @@ def processStormJSON(inputJSON):
             
             
         '''THRESHOLD CHECKS AND DATA CONDITIONING...'''
+        #bInland (intersect method)
+        def inlandList(df):
+            TimeStepList = []
+            try:
+                point = geopandas.GeoDataFrame(df, geometry=geopandas.points_from_xy(df.Longitude, df.Latitude)).copy()
+                point.crs = "epsg:4326"
+                polygon = geopandas.GeoDataFrame.from_file(r'C:\Users\Clindeman\OneDrive - niyamit.com\Hurrevac\Hurrevac\src\assets\spatial\syStateHU.shp')
+                pointInPolys = sjoin(point, polygon, how='left')
+                inlandPoints = pointInPolys[pointInPolys.index_right.notnull()].copy()
+                inlandPointsDF = pd.DataFrame(inlandPoints.drop(columns='geometry'))
+                TimeStepList = inlandPointsDF['TimeStep'].to_list()
+            except Exception as e:
+                print(e)
+            return TimeStepList
+        def InlandUpdate(row, inlandList):
+            try:
+                if row['TimeStep'] in inlandList:
+                    return 1
+                else:
+                    return 0
+            except Exception as e:
+                print(e)
+        inlandList = inlandList(df)
+        df['bInland'] = df.apply(lambda row: InlandUpdate(row, inlandList), axis=1)
+        
         #Zero out wind radii based on maxwindspeed...
         try:
             for i in range(0, len(df)):
