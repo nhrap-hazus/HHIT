@@ -131,25 +131,25 @@ def processStormJSON(inputJSON):
         df.rename(columns = {'centerLongitude':'Longitude'}, inplace=True)
         
         '''bInland (intersect method)'''
-        def inlandList(df):
+        def createInlandList(inputDF):
             '''Requires TimeStep be populated; run before calc maxwindspeed.'''
             TimeStepList = []
             try:
-                point = geopandas.GeoDataFrame(df, geometry=geopandas.points_from_xy(df.Longitude, df.Latitude)).copy()
+                point = geopandas.GeoDataFrame(inputDF, geometry=geopandas.points_from_xy(inputDF.Longitude, inputDF.Latitude)).copy()
                 point.crs = "epsg:4326"
                 try:
                     polygonPath = './src/assets/spatial/cb_2018_us_nation_5m_EPSG4326.shp'
                     polygon = geopandas.GeoDataFrame.from_file(polygonPath)
                 except Exception as e:
-                    print('assets/spatial/polygon issue')
+                    print('polygon issue')
                     print(polygonPath)
                     print(e)
-                    
                 pointInPolys = sjoin(point, polygon, how='left')
                 inlandPoints = pointInPolys[pointInPolys.index_right.notnull()].copy()
                 inlandPointsDF = pd.DataFrame(inlandPoints.drop(columns='geometry'))
                 TimeStepList = inlandPointsDF['TimeStep'].to_list()
             except Exception as e:
+                print('inlandlist issue')
                 print(e)
             return TimeStepList
         
@@ -160,10 +160,11 @@ def processStormJSON(inputJSON):
                 else:
                     return 0
             except Exception as e:
+                print('inlandupdate issue')
                 print(e)
                 
         try:
-            inlandList = inlandList(df)
+            inlandList = createInlandList(df)
         except Exception as e:
             print('binlandlist issue')
             print(e)        
@@ -409,7 +410,7 @@ def processStormJSON(inputJSON):
             '''Forecast bInland (intersect method)'''
             dfForecasts['bInland'] = 0
             try:
-                forecastInlandList = inlandList(dfForecasts)
+                forecastInlandList = createInlandList(dfForecasts)
             except Exception as e:
                 print('Forecast binlandlist issue')
                 print(e)
