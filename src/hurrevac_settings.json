@@ -1,8 +1,5 @@
 {
-	"HurrevacSettings": "User will need to input server, user and password for hazus and urls for Hurrevac.",
-	"HazusServerName":"DESKTOP-FVD6E70\\HAZUSPLUSSRVR",
-	"HazusUserName":"hazuspuser",
-	"HazusPassword":"Gohazusplus_02",
+	"HurrevacSettings": "",
 	"OptimizeStormTrack":1,
 	"BasinsDictionary": {"al":"Atlantic",
 						"cp":"Central Pacific",
