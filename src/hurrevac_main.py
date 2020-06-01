@@ -10,8 +10,9 @@ import tkinter.ttk as ttk
 from tkinter import messagebox as messagebox
 import pandas as pd
 import json
-import hazus
+#import hazus
 '''standalone method'''
+import os
 from sqlalchemy import create_engine
 
 try:
@@ -70,35 +71,28 @@ def ExportToJSON(inputDataFrame, outputPath):
     df.to_json(outputPath)
 
 def CheckScenarioName(huScenarioName):
-    '''standalone method'''
-    server = hurrevacSettings['HazusServerName']
-    userName = hurrevacSettings['HazusUserName']
-    password = hurrevacSettings['HazusPassword']
-    engine = create_engine('mssql+pyodbc://'+userName+':'+password+'@'+server+'/syHazus?driver=SQL+Server')
-    conn = engine.connect()
-    scenariosDF = pd.read_sql_table(table_name="huScenario", con=conn)
-    '''hazus method'''
-    # db = hazus.legacy.HazusDB()
-    # conn = db.createConnection()
-    # scenariosDF = db.query("SELECT * FROM syHazus.dbo.huScenario")
-    scenariosList = scenariosDF['huScenarioName'].values.tolist()
-    if huScenarioName not in scenariosList:
-        return True
-    else:
-        popupmsg(f'Scenario "{huScenarioName}" already exists.\nPlease use "Hazus Hurricane Scenario Wizard" to edit or delete.')
-        return False
+    try:
+        computername = os.environ['COMPUTERNAME']
+        engine = create_engine('mssql+pyodbc://hazuspuser:Gohazusplus_02@'+computername+'\\HAZUSPLUSSRVR/syHazus?driver=SQL+Server')
+        conn = engine.connect()
+        scenariosDF = pd.read_sql_table(table_name="huScenario", con=conn)
+        scenariosList = scenariosDF['huScenarioName'].values.tolist()
+        if huScenarioName not in scenariosList:
+            return True
+        else:
+            popupmsg(f'Scenario "{huScenarioName}" already exists.\nPlease use "Hazus Hurricane Scenario Wizard" to edit or delete.')
+            return False
+    except Exception as e:
+        popupmsg(f"Error checking {huScenarioName} in Hazus.")
+        print('CheckscenarioName issue')
+        print(e)
 
 def ExportToHazus(huScenarioName, huScenario, huStormTrack):
-    server = hurrevacSettings['HazusServerName']
-    userName = hurrevacSettings['HazusUserName']
-    password = hurrevacSettings['HazusPassword']
     try:
         '''standalone method'''
-        engine = create_engine('mssql+pyodbc://'+userName+':'+password+'@'+server+'/syHazus?driver=SQL+Server')
+        computername = os.environ['COMPUTERNAME']
+        engine = create_engine('mssql+pyodbc://hazuspuser:Gohazusplus_02@'+computername+'\\HAZUSPLUSSRVR/syHazus?driver=SQL+Server')
         conn = engine.connect()
-        '''hazus method'''
-        # db = hazus.legacy.HazusDB()
-        # conn = db.createConnection()
     except:
         popupmsg("Error connecting to Hazus SQL Server. Check your Settings.json")
     huScenarioDoesntExist = CheckScenarioName(huScenarioName)
@@ -108,9 +102,6 @@ def ExportToHazus(huScenarioName, huScenario, huStormTrack):
             '''standalone method'''
             huScenario.to_sql(name="huScenario", con=conn, if_exists='append', index=False)
             huStormTrack.to_sql(name="huStormTrack", con=conn, if_exists='append', index=False)
-            '''hazus method'''
-            # huScenario.to_sql(name="syHazus.dbo.huScenario", con=conn, if_exists='append', index=False)
-            # huStormTrack.to_sql(name="syHazus.dbo.huStormTrack", con=conn, if_exists='append', index=False)
             popupmsgNextSteps(f'''Scenario "{huScenarioName}" is now available in Hazus.
                   
 Please build or open an existing region and:
