@@ -1,10 +1,15 @@
 Important order of operations in storm processing (hurrevac_storm.py):
 
-1 JSON maxWinds(knots) -> MaxWindSpeed(mph and HurrevacVmaxFactor applied)
+ Fill in intermediate values
 
-2 RadiusToHurrWindType (miles) should run before inland adjustment to maxwindspeed.
+ JSON maxWinds(knots) -> MaxWindSpeed(mph and HurrevacVmaxFactor applied)
 
-3 MaxWindSpeed(mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (first inland point not adjusted)
+ RadiusToHurrWindType (miles) should run before inland adjustment to maxwindspeed.
 
-4 OptimizeTrack runs after all cacluations are finished and forecast points appended to main dataframe and before loading to sql server.
+ RadiusToXWinds (34, 50, 64)
 
+ ZeroOut RadiusToXWinds (based on HurrWindType)
+
+ MaxWindSpeed(mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (first inland point not adjusted)
+
+ OptimizeTrack runs after all cacluations are finished and forecast points appended to main dataframe and before loading to sql server.
