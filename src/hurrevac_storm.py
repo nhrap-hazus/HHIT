@@ -205,7 +205,7 @@ def processStormJSON(inputJSON):
         except Exception as e:
             print('MaxWindSpeed issue')
             print(e)
-        
+            
         '''RadiusToHurrWindsType''' 
         def radiusToHurrWindsTypeCalc(row):
             '''use maxwind*vmaxfactor in mph to determine'''
@@ -242,14 +242,6 @@ def processStormJSON(inputJSON):
                     for x in WindFields['windFields']:
                         if int(x['windSpeed']) == windCat:
                             radiiMax = max(x['extent']['northEast'], x['extent']['southEast'], x['extent']['northWest'], x['extent']['southWest'])
-                            #Kept for reference just in case:
-                            # if windCat in (34, 50):
-                            #     regressionValue = 0.8996 * radiiMax - 0.5031
-                            # elif windCat in (64):
-                            #     regressionValue = 0.9472 * radiiMax - 0.277
-                            # if regressionValue < 0:
-                            #     regressionValue = 0
-                            # value = (regressionValue * HurrevacKnotToMphFactor) * RHurrXFactor
                             value = (radiiMax * HurrevacKnotToMphFactor) * RHurrXFactor
                             return value
                 else:
@@ -269,29 +261,29 @@ def processStormJSON(inputJSON):
         except Exception as e:
             print('RadiusToXWinds')
             print(e)
-    
-        '''Only for interim (i.e. 4A), Where ever there is a 0 or null, use previous'''
-        for fieldName in ['RadiusToHurrWinds',\
-                          'RadiusTo50KWinds',\
-                          'RadiusTo34KWinds']:
-            previous = None
+
+        '''Only for interim (i.e. 4A), Where ever there is a 0 or null, use previous.'''
+        for fieldNameRadiusToWind in ['RadiusToHurrWinds',\
+                                      'RadiusTo50KWinds',\
+                                      'RadiusTo34KWinds']:
             for i in df.index:
-                current = df.loc[i, fieldName]
-                numberValue = str(df.loc[i, 'number'])
+                currentRadiusValue = df.loc[i, fieldNameRadiusToWind]
+                currentNumberValue = str(df.loc[i, 'number'])
                 if i == 0:
                     '''First row won't have a previous'''
                     pass
                 else:
-                    if 'A' in numberValue.upper():
-                        if current == 0:
-                            df.loc[i, fieldName] = previous
+                    if not currentNumberValue.isnumeric():
+                        '''Interim advisories are alphanumeric, not numeric.'''
+                        if currentRadiusValue == 0:
+                            df.loc[i, fieldNameRadiusToWind] = df.loc[i-1, fieldNameRadiusToWind]
                         else:
                             pass
                     else:
+                        '''number is numeric and not an interim advisory'''
                         pass
-                previous = current
     
-        '''Zero out wind radii based on maxwindspeed...'''
+        '''Zero out wind radii based on HurrWindsType...'''
         try:
             for i in range(0, len(df)):
                 CurrentHurrType = str(df.loc[i, 'RadiusToHurrWindsType'])
@@ -333,23 +325,24 @@ def processStormJSON(inputJSON):
         #pass
         
         '''bInland MaxWindSpeed Adjustment'''
-        '''First landfall point doesn't get adjusted'''
-        try:
-            previousInland = None
-            for i in df.index:
-                currentInland = df.loc[i, 'bInland']
-                if i == 0:
-                    '''First row won't have a previous'''
-                    pass
-                elif currentInland == 1 and previousInland == 1:
-                    '''change all but the first row that has inland'''
-                    df.loc[i, 'MaxWindSpeed'] = df.loc[i, 'MaxWindSpeed'] * 1.15
-                else:
-                    pass
-                previousInland = currentInland
-        except Exception as e:
-            print('bInland MaxWindSpeed issue')
-            print(e)
+        '''may remove after testing as it might be related to interim advisories provided in mph, not knots'''
+        # '''First landfall point doesn't get adjusted'''
+        # try:
+        #     previousInland = None
+        #     for i in df.index:
+        #         currentInland = df.loc[i, 'bInland']
+        #         if i == 0:
+        #             '''First row won't have a previous'''
+        #             pass
+        #         elif currentInland == 1 and previousInland == 1:
+        #             '''change all but the first row that has inland'''
+        #             df.loc[i, 'MaxWindSpeed'] = df.loc[i, 'MaxWindSpeed'] * 1.15
+        #         else:
+        #             pass
+        #         previousInland = currentInland
+        # except Exception as e:
+        #     print('bInland MaxWindSpeed issue')
+        #     print(e)
 
 
 
@@ -430,7 +423,7 @@ def processStormJSON(inputJSON):
                 maxWindsMPHHVF = maxWindsMPH * HurrevacVmaxFactor
                 return maxWindsMPHHVF
             try:
-                dfForecasts['MaxWindSpeed'] = df.apply(lambda row: MaxWindSpeedCalc(row), axis=1)
+                dfForecasts['MaxWindSpeed'] = dfForecasts.apply(lambda row: MaxWindSpeedForecastCalc(row), axis=1)
             except Exception as e:
                 print('Forecast MaxWindSpeed')
                 print(e)
@@ -447,18 +440,18 @@ def processStormJSON(inputJSON):
             dfForecasts['RadiusTo50KWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 50, HurrevacRHurr50Factor), axis=1)
             dfForecasts['RadiusToHurrWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 64, HurrevacRHurr64Factor), axis=1)
         
-            '''Zero out wind radii based on maxwindspeed...'''
+            '''Zero out wind radii based on HurrWindsType...'''
             try:
                 for i in range(0, len(dfForecasts)):
                     '''this requires that maxwindspeed is in mph and has hurrevac vmax factor applied'''
-                    CurrentMaxWindSpeed = dfForecasts.loc[i, 'MaxWindSpeed']
-                    if CurrentMaxWindSpeed <= 57:
+                    CurrentHurrType = str(dfForecasts.loc[i, 'RadiusToHurrWindsType'])
+                    if CurrentHurrType == 'T':
                         dfForecasts.loc[i, 'RadiusTo50KWinds'] = 0
                         dfForecasts.loc[i, 'RadiusToHurrWinds'] = 0
-                    elif CurrentMaxWindSpeed > 57 and CurrentMaxWindSpeed < 74:
+                    elif CurrentHurrType == '5':
                         dfForecasts.loc[i, 'RadiusTo34KWinds'] = 0
                         dfForecasts.loc[i, 'RadiusToHurrWinds'] = 0
-                    elif CurrentMaxWindSpeed >= 74:
+                    elif CurrentHurrType == 'H':
                         dfForecasts.loc[i, 'RadiusTo34KWinds'] = 0
                         dfForecasts.loc[i, 'RadiusTo50KWinds'] = 0
                     else:
@@ -470,7 +463,8 @@ def processStormJSON(inputJSON):
             '''Forecast Translation Speed'''
             dfForecasts['TranslationSpeed'] = 0
             
-            # '''Translation Speed'''
+            '''Translation Speed'''
+            '''this can be calculated by Hazus, disabled for now'''
             # #speed in mph from advisory point to forecast point 0, etc...
             # dfForecasts['distance'] = np.nan
             # dfForecasts['TranslationSpeed'] = np.nan
@@ -540,22 +534,23 @@ def processStormJSON(inputJSON):
                 print(e)
                 
             '''Forecast bInland MaxWindSpeed Adjustment'''
-            try:
-                previousInland = None
-                for i in dfForecasts.index:
-                    currentInland = dfForecasts.loc[i, 'bInland']
-                    if i == 0:
-                        '''First row won't have a previous'''
-                        pass
-                    elif currentInland == 1 and previousInland == 1:
-                        '''change all but the first row that has inland'''
-                        dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i, 'MaxWindSpeed'] * 1.15
-                    else:
-                        pass
-                    previousInland = currentInland
-            except Exception as e:
-                print('Forecast bInland MaxWindSpeed issue')
-                print(e)
+            '''might remove after testing'''
+            # try:
+            #     previousInland = None
+            #     for i in dfForecasts.index:
+            #         currentInland = dfForecasts.loc[i, 'bInland']
+            #         if i == 0:
+            #             '''First row won't have a previous'''
+            #             pass
+            #         elif currentInland == 1 and previousInland == 1:
+            #             '''change all but the first row that has inland'''
+            #             dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i, 'MaxWindSpeed'] * 1.15
+            #         else:
+            #             pass
+            #         previousInland = currentInland
+            # except Exception as e:
+            #     print('Forecast bInland MaxWindSpeed issue')
+            #     print(e)
                 
             
             
@@ -610,7 +605,7 @@ def processStormJSON(inputJSON):
 
             '''RadiusTo34KWinds'''
             def ThresholdRadiusTo34KWinds(row):
-                if row['MaxWindSpeed'] < 58 and row['RadiusTo34KWinds'] == 0:
+                if row['RadiusToHurrWindsType'] == 'T' and row['RadiusTo34KWinds'] == 0:
                     return 30
                 else:
                     return row['RadiusTo34KWinds']
