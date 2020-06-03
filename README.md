@@ -3,9 +3,7 @@ A class to extract, transform and load Hurrevac tropical storm data.
 Currently it is a stand alone tool but may be intended as a class in HazPy.
 This is a work in progress.
 
-Hurrevac Load Tool
-
-The Hurravac Load Tool loads the Hurrevac Storm data of your choosing to your desktop Hazus database.
+The Hazus Hurravac Import Tool loads the Hurrevac Storm data of your choosing to your desktop Hazus database.
 
 ## To Use
 
