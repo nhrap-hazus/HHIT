@@ -13,7 +13,7 @@ The Hurravac Load Tool loads the Hurrevac Storm data of your choosing to your de
 
 1. Download zip folder of tool from GitHub, unzip
 
-2. Double-click "hazus-hurrevac-load-tool.py"
+2. Double-click "hazus-hurrevac-import-tool.py"
 
 3. If you don't have the Hazus Python Library installed you will need to install it. (!INSERT HOW TO DO THAT OR FOLLOW export tools method)
 
