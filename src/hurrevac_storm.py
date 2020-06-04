@@ -327,22 +327,26 @@ def processStormJSON(inputJSON):
         '''bInland MaxWindSpeed Adjustment'''
         '''may remove after testing as it might be related to interim advisories provided in mph, not knots'''
         # '''First landfall point doesn't get adjusted'''
-        # try:
-        #     previousInland = None
-        #     for i in df.index:
-        #         currentInland = df.loc[i, 'bInland']
-        #         if i == 0:
-        #             '''First row won't have a previous'''
-        #             pass
-        #         elif currentInland == 1 and previousInland == 1:
-        #             '''change all but the first row that has inland'''
-        #             df.loc[i, 'MaxWindSpeed'] = df.loc[i, 'MaxWindSpeed'] * 1.15
-        #         else:
-        #             pass
-        #         previousInland = currentInland
-        # except Exception as e:
-        #     print('bInland MaxWindSpeed issue')
-        #     print(e)
+        #if under 40, set to 40 instead of *1.15
+        try:
+            previousInland = None
+            for i in df.index:
+                currentInland = df.loc[i, 'bInland']
+                if i == 0:
+                    '''First row won't have a previous'''
+                    pass
+                elif currentInland == 1 and previousInland == 1:
+                    '''change all but the first row that has inland'''
+                    if df.loc[i, 'MaxWindSpeed'] < 40:
+                        df.loc[i, 'MaxWindSpeed'] = 40
+                    else:
+                        df.loc[i, 'MaxWindSpeed'] = df.loc[i, 'MaxWindSpeed'] * 1.15
+                else:
+                    pass
+                previousInland = currentInland
+        except Exception as e:
+            print('bInland MaxWindSpeed issue')
+            print(e)
 
 
 
@@ -534,23 +538,25 @@ def processStormJSON(inputJSON):
                 print(e)
                 
             '''Forecast bInland MaxWindSpeed Adjustment'''
-            '''might remove after testing'''
-            # try:
-            #     previousInland = None
-            #     for i in dfForecasts.index:
-            #         currentInland = dfForecasts.loc[i, 'bInland']
-            #         if i == 0:
-            #             '''First row won't have a previous'''
-            #             pass
-            #         elif currentInland == 1 and previousInland == 1:
-            #             '''change all but the first row that has inland'''
-            #             dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i, 'MaxWindSpeed'] * 1.15
-            #         else:
-            #             pass
-            #         previousInland = currentInland
-            # except Exception as e:
-            #     print('Forecast bInland MaxWindSpeed issue')
-            #     print(e)
+            try:
+                previousInland = None
+                for i in dfForecasts.index:
+                    currentInland = dfForecasts.loc[i, 'bInland']
+                    if i == 0:
+                        '''First row won't have a previous'''
+                        pass
+                    elif currentInland == 1 and previousInland == 1:
+                        '''change all but the first row that has inland'''
+                        if dfForecasts.loc[i, 'MaxWindSpeed'] < 40:
+                            dfForecasts.loc[i, 'MaxWindSpeed'] = 40
+                        else:
+                            dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i, 'MaxWindSpeed'] * 1.15
+                    else:
+                        pass
+                    previousInland = currentInland
+            except Exception as e:
+                print('Forecast bInland MaxWindSpeed issue')
+                print(e)
                 
             
             
