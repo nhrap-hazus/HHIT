@@ -262,12 +262,13 @@ def processStormJSON(inputJSON):
             print('RadiusToXWinds')
             print(e)
 
-        '''Only for interim (i.e. 4A), Where ever there is a 0 or null, use previous.'''
-        for fieldNameRadiusToWind in ['RadiusToHurrWinds',\
-                                      'RadiusTo50KWinds',\
-                                      'RadiusTo34KWinds']:
+        '''Only for interim (i.e. 4A), Where there is a 0 or null, use previous.'''
+        for fieldName in ['RadiusToHurrWinds',\
+                        'RadiusTo50KWinds',\
+                        'RadiusTo34KWinds',\
+                        'futureForecasts']:
             for i in df.index:
-                currentRadiusValue = df.loc[i, fieldNameRadiusToWind]
+                currentRadiusValue = df.loc[i, fieldName]
                 currentNumberValue = str(df.loc[i, 'number'])
                 if i == 0:
                     '''First row won't have a previous'''
@@ -276,7 +277,7 @@ def processStormJSON(inputJSON):
                     if not currentNumberValue.isnumeric():
                         '''Interim advisories are alphanumeric, not numeric.'''
                         if currentRadiusValue == 0:
-                            df.loc[i, fieldNameRadiusToWind] = df.loc[i-1, fieldNameRadiusToWind]
+                            df.loc[i, fieldName] = df.loc[i-1, fieldName]
                         else:
                             pass
                     else:
