@@ -262,11 +262,11 @@ def processStormJSON(inputJSON):
             print('RadiusToXWinds')
             print(e)
 
+        '''FILL IN INTERIM FIELDS WHERE NEEDED'''
         '''Only for interim (i.e. 4A), Where there is a 0 or null, use previous.'''
         for fieldName in ['RadiusToHurrWinds',\
                         'RadiusTo50KWinds',\
-                        'RadiusTo34KWinds',\
-                        'futureForecasts']:
+                        'RadiusTo34KWinds']:
             for i in df.index:
                 currentRadiusValue = df.loc[i, fieldName]
                 currentNumberValue = str(df.loc[i, 'number'])
@@ -283,6 +283,29 @@ def processStormJSON(inputJSON):
                     else:
                         '''number is numeric and not an interim advisory'''
                         pass
+        '''Interim futureForecasts'''
+        for i in df.index:
+            try:
+                currentNumberValue = str(df.loc[i, 'number'])
+                currentFutureForecasts = df.loc[i, 'futureForecasts']
+                if i == 0:
+                    '''First row won't have a previous'''
+                    pass
+                else:
+                    if not currentNumberValue.isnumeric():
+                        '''Interim advisories are alphanumeric, not numeric.'''
+                        if len(currentFutureForecasts) == 0:
+                            '''can't use .loc to insert a list'''
+                            df.at[i, 'futureForecasts'] = df.loc[i-1, 'futureForecasts']
+                        else:
+                            pass
+                    else:
+                        '''number is numeric and not an interim advisory'''
+                        pass
+            except Exception as e:
+                print('Interim futureForecasts issue')
+                print(e)
+                    
     
         '''Zero out wind radii based on HurrWindsType...'''
         try:
