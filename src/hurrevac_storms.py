@@ -95,6 +95,8 @@ class StormsInfo:
     
     def GetStormNames(self, stormTypes, basinLabel, year):
         '''Get basins code from label in settings.json'''
+        '''It would be nice to sort storms by alphabet then greek alphabet 
+           when there are more than 26 storms'''
         StormBasins = hurrevacSettings['BasinsDictionary']
         basinCode = get_key(basinLabel, StormBasins)
         #working with json

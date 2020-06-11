@@ -138,7 +138,8 @@ def processStormJSON(inputJSON):
                 point = geopandas.GeoDataFrame(inputDF, geometry=geopandas.points_from_xy(inputDF.Longitude, inputDF.Latitude)).copy()
                 point.crs = "epsg:4326"
                 try:
-                    polygonPath = './src/assets/spatial/inlandPolygon.shp'
+                    #polygonPath = './src/assets/spatial/inlandPolygon.shp'
+                    polygonPath = './src/assets/spatial/inlandPolygon.json'
                     polygon = geopandas.GeoDataFrame.from_file(polygonPath)
                 except Exception as e:
                     print('polygon issue')
@@ -179,15 +180,9 @@ def processStormJSON(inputJSON):
         df['TranslationSpeed'] = 0
         #see also forecast section
         
-        # '''TranslationSpeed'''
-        #commented out as this can be calculated by Hazus
-        # #read speed in nautical miles directly for advisory points
-        # def translationSpeedCalc(row):
-        #     speedKnots = row['speed']
-        #     speedMph = speedKnots * HurrevacKnotToMphFactor
-        #     return speedMph
-        # df['TranslationSpeed'] = df.apply(lambda row: translationSpeedCalc(row), axis=1)
-        # #see also forecast section
+        '''TranslationSpeed'''
+        #calculated by Hazus
+        #pass
     
         '''RadiusToMaxWinds'''
         df['RadiusToMaxWinds'] = 0
@@ -350,7 +345,7 @@ def processStormJSON(inputJSON):
         
         '''bInland MaxWindSpeed Adjustment'''
         '''may remove after testing as it might be related to interim advisories provided in mph, not knots'''
-        # '''First landfall point doesn't get adjusted'''
+        # '''Don't adjust first inland point (stm appears to not adjust)'''
         #if under 40, set to 40 instead of *1.15
         try:
             previousInland = None
@@ -545,15 +540,15 @@ def processStormJSON(inputJSON):
                 #set default point...
                 cpA = maxAdvisory['CentralPressure']
                 mwsA = maxAdvisory['MaxWindSpeed']
-                for i in range(0, len(dfForecasts)):
+                for i in dfForecasts.index:
                     mwsB = dfForecasts.loc[i, 'MaxWindSpeed']
                     if mwsA <= 0:
-                        #this needs to be reworked to not stop if initial mwsA is 0!
-                        pass
+                        #if initial mwsA is 0, there will be a divide by 0 error
+                        dfForecasts.loc[i, 'CentralPressure'] = 1013
                     else:
                         cpB = (pressureBar - (pressureBar - cpA) * (mwsB/mwsA)**2)
-                        cpB = int(cpB + 0.5)
-                        dfForecasts.loc[i, 'CentralPressure'] = cpB
+                        cpBint = int(cpB + 0.5)
+                        dfForecasts.loc[i, 'CentralPressure'] = cpBint
                         #set beginning point to previous forecast point for next loop...
                         cpA = cpB
                         mwsA = mwsB
@@ -734,4 +729,20 @@ def processStormJSON(inputJSON):
             
 #Test some of the code above...
 if __name__ == "__main__":
-    popupmsg('popupmsg test one two.')
+    #popupmsg('popupmsg test one two.')
+    
+    '''Manually process a Hurrevac json storm file'''
+    runThis = None
+    if runThis:
+        import hurrevac_storms
+        import hurrevac_main
+        dataPath = r"C:\Users\Clindeman\OneDrive - niyamit.com\Hurrevac\Data_production\al032020_22.json"
+        df = pd.read_json(dataPath)
+        '''Creat a storm object, process json to create dataframes, export to sql server'''
+        storm = hurrevac_storms.StormInfo()
+        storm.GetStormDataframe(df)
+        hurrevac_main.ExportToHazus(storm.huScenarioName, storm.huScenario, storm.huStormTrack)
+
+    
+
+    

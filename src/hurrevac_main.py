@@ -10,7 +10,6 @@ import tkinter.ttk as ttk
 from tkinter import messagebox as messagebox
 import pandas as pd
 import json
-#import hazus
 '''standalone method'''
 import os
 from sqlalchemy import create_engine
