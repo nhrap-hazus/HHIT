@@ -151,12 +151,12 @@ class HazusDB():
         else:
             truncateSetting = 'append'
         dataframe.to_sql(name=tableName, con=self.writeConn, if_exists=truncateSetting, index=False)
-        
+    
 
 
 #TEST writeconnection and append data
-testDataframe = pd.DataFrame({'huScenarioName' : ['Test']})
-z = HazusDB()
-z.createWriteConnection(databaseName='syHazus')
-z.appendData(dataframe=testDataframe, tableName='huScenario')
+# testDataframe = pd.DataFrame({'huScenarioName' : ['Test']})
+# z = HazusDB()
+# z.createWriteConnection(databaseName='syHazus')
+# z.appendData(dataframe=testDataframe, tableName='huScenario')
 
