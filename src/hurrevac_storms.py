@@ -10,6 +10,7 @@ import tkinter.ttk as ttk
 import urllib.request
 import json
 import hurrevac_storm
+import logging
 
 try:
     with open("hurrevac_settings.json") as f:
@@ -58,7 +59,7 @@ class StormsInfo:
             stormsJSON = json.loads(stormsdata)
             self.JSON = stormsJSON
         else:
-            print("Error receiving data", openUrl.getcode())
+            logging.error("Error receiving data", openUrl.getcode())
             
     def GetStormsTypes(self):
         #working with json
@@ -158,10 +159,14 @@ class StormInfo:
             #Need to check if response is 200 but there is no data "[]", ie a non-valid stormid request.
             stormdata = openUrl.read()
             stormJSON = json.loads(stormdata)
-            self.JSON = stormJSON
+            if len(stormJSON) == 0:
+                popupmsg("Incorrect StormID")
+                logging.warning("stormJSON length is 0, possible incorrect stormid")
+            else:
+                self.JSON = stormJSON
         else:
             popupmsg("Error receiving data. Check settings.json url or site is down or changed.")
-            print("Error receiving data", openUrl.getcode())
+            logging.error("Error receiving data", openUrl.getcode())
 
     def GetStormDataframe(self, stormJSON):
         #from other python script

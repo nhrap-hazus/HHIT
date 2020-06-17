@@ -14,6 +14,16 @@ import json
 import os
 #from sqlalchemy import create_engine
 from hazpy.legacy import common as hazpy_common
+import logging
+import logging.config
+
+'''Setup Logging'''
+logger = logging.getLogger()
+configLoggerFile = "./src/config_logging.json" #set in reference for hazus-hurrevac-import-tool.py
+with open(configLoggerFile, "r", encoding="utf-8") as fd:
+    loggerConfig = json.load(fd)
+logging.config.dictConfig(loggerConfig["logging"])
+logging.info(' Logging level set to: ?')
 
 try:
     with open("hurrevac_settings.json") as f:
@@ -128,8 +138,8 @@ def CheckScenarioName(huScenarioName):
             return False
     except Exception as e:
         popupmsg(f"Error checking {huScenarioName} in Hazus.")
-        print('CheckscenarioName issue')
-        print(e)
+        logging.error('CheckscenarioName issue')
+        logging.error(e)
         
 def ExportToHazus(huScenarioName, huScenario, huStormTrack):
     '''hazpy method'''
@@ -137,11 +147,13 @@ def ExportToHazus(huScenarioName, huScenario, huStormTrack):
         z = hazpy_common.HazusDB()
         z.createWriteConnection(databaseName='syHazus')
         conn = z.writeConn
-    except:
-        popupmsg("Error connecting to Hazus SQL Server. Check your Settings.json")
+    except Exception as e:
+        popupmsg("Error connecting to Hazus SQL Server.")
+        logging.error("Error connecting to Hazus SQL Server.")
+        logging.error(e)
     huScenarioDoesntExist = CheckScenarioName(huScenarioName)
     if huScenarioDoesntExist:
-        print(f'scenario "{huScenarioName}" does not exist in huScenario, proceed')
+        logging.info(f'scenario "{huScenarioName}" does not exist in huScenario, proceed')
         try:
             z.appendData(dataframe=huScenario, tableName='huScenario')
             z.appendData(dataframe=huStormTrack, tableName='huStormTrack')
@@ -153,7 +165,8 @@ Please build or open an existing region and:
 3. Select Next and proceed through Hazus wizard until new scenario is saved.''')
         except Exception as e:
             popupmsg(f"Error loading {huScenarioName} into Hazus.")
-            print(e)
+            logging.error(f"Error loading {huScenarioName} into Hazus.")
+            logging.error(e)
 
 # #Test some of the code above...
 if __name__ == "__main__":
