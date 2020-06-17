@@ -1,0 +1,3 @@
+INFO    ;  7832; MainThread; 11:12:31; root              26;  Logging level set to: ?
+INFO    ;  7832; MainThread; 11:19:03; root             156; scenario "ARTHUR_Adv_12_AL2020" does not exist in huScenario, proceed
+INFO    ;  7832; MainThread; 11:19:13; root             156; scenario "BERTHA_Adv_6_AL2020" does not exist in huScenario, proceed
