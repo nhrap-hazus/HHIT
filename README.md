@@ -23,7 +23,7 @@ The Hazus Hurravac Import Tool loads the Hurrevac Storm data of your choosing to
 
 ## Requirements
 
-The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be installed on your computer. Anaconda is a free software that automatically manages all Python packages required to run Hazus open source tools - including the Hazus Python package: https://fema-nhrap.s3.amazonaws.com/Hazus/Python/build/html/index.html
+The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be installed on your computer and an active internet connection. Anaconda is a free software that automatically manages all Python packages required to run Hazus open source tools - including the Hazus Python package: https://fema-nhrap.s3.amazonaws.com/Hazus/Python/build/html/index.html
 
 1. Go to https://www.anaconda.com/distribution/
 
