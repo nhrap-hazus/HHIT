@@ -13,7 +13,7 @@ import json
 '''standalone method'''
 import os
 #from sqlalchemy import create_engine
-import hazpy_legacy_common
+from hazpy.legacy import common as hazpy_common
 
 try:
     with open("hurrevac_settings.json") as f:
@@ -115,7 +115,7 @@ def ExportToJSON(inputDataFrame, outputPath):
 def CheckScenarioName(huScenarioName):
     '''hazpy method'''
     try:       
-        z = hazpy_legacy_common.HazusDB()
+        z = hazpy_common.HazusDB()
         z.createWriteConnection(databaseName='syHazus')
         conn = z.writeConn
         scenariosDF = pd.read_sql_table(table_name="huScenario", con=conn)
@@ -133,7 +133,7 @@ def CheckScenarioName(huScenarioName):
 def ExportToHazus(huScenarioName, huScenario, huStormTrack):
     '''hazpy method'''
     try:
-        z = hazpy_legacy_common.HazusDB()
+        z = hazpy_common.HazusDB()
         z.createWriteConnection(databaseName='syHazus')
         conn = z.writeConn
     except:
