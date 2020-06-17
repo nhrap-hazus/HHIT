@@ -35,7 +35,7 @@
     "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/Hurrevac/master/src/__init__.py"
   },
   "dev": {
-    "hazusInitUrl": "https://raw.githubusercontent.com/nhrap-dev/hazus/master/hazus/__init__.py",
+    "hazusInitUrl": "https://raw.githubusercontent.com/nhrap-dev/hazpy/master/hazpy/__init__.py",
     "repoZipfileUrl": "https://github.com/nhrap-dev/Hurrevac/archive/master.zip",
     "toolInitUrl": "https://raw.githubusercontent.com/nhrap-dev/Hurrevac/master/src/__init__.py"
   },
