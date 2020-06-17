@@ -3,9 +3,8 @@ try:
     if internetConnected():
         checkForHazusUpdates()
         checkForToolUpdates()
-
-    from subprocess import check_call
-    check_call('CALL conda.bat activate hazus_env && python .\src\hurrevac_gui.py', shell=True)
+        from subprocess import check_call
+        check_call('CALL conda.bat activate hazus_env && python .\src\hurrevac_gui.py', shell=True)
 
 except:
     import ctypes
