@@ -66,11 +66,12 @@ def get_key(val, my_dict):
     return "key doesn't exist"
 
 #Tools to export data
-def ExportToJSON(inputDataFrame, outputPath):
-    df = inputDataFrame
-    df.to_json(outputPath)
+# def ExportToJSON(inputDataFrame, outputPath):
+#     df = inputDataFrame
+#     df.to_json(outputPath)
 
 # def CheckScenarioName(huScenarioName):
+#     '''standalone method'''
 #     try:
 #         computername = os.environ['COMPUTERNAME']
 #         engine = create_engine('mssql+pyodbc://hazuspuser:Gohazusplus_02@'+computername+'\\HAZUSPLUSSRVR/syHazus?driver=SQL+Server')
@@ -88,8 +89,8 @@ def ExportToJSON(inputDataFrame, outputPath):
 #         print(e)
 
 # def ExportToHazus(huScenarioName, huScenario, huStormTrack):
+#     '''standalone method'''
 #     try:
-#         '''standalone method'''
 #         computername = os.environ['COMPUTERNAME']
 #         engine = create_engine('mssql+pyodbc://hazuspuser:Gohazusplus_02@'+computername+'\\HAZUSPLUSSRVR/syHazus?driver=SQL+Server')
 #         conn = engine.connect()
