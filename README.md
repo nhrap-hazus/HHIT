@@ -9,15 +9,23 @@ The HITT is developed using the Hazus Python Package, HazPy. HazPy tools automat
 
 1. Download zip folder of tool from GitHub, unzip
 
-![Download HHIT](Images/Step1.png "Download HHIT")
+![Download HITT](src/assets/images/DownloadHITT.png "Download HITT") 
 
 2. Double-click "hazus-hurrevac-import-tool.py". If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again
 
+![Run HITT](src/assets/images/RunHITT.png "Run HITT") 
+
 3. Select a combination of storm type, basin and year to see a list of available storms. Select the storm from the drop down list.
+
+![HITT Select Storm](src/assets/images/SelectStorm.png "HHIT Select Storm") 
 
 4. Alternatively if you know the Hurrevac storm id, enter it in the entry box.
 
+![HITT Enter Storm](src/assets/images/EnterStorm.png "HHIT Enter Storm")
+
 5. Click the 'Load to Hazus' button to load your selected storm from the list or your entered storm id to your Hazus database.
+
+![HITT Load To Hazus](src/assets/images/LoadToHazus.png "HHIT Load To Hazus")
 
 ## Requirements
 
