@@ -27,6 +27,13 @@ The HITT is developed using the Hazus Python Package, HazPy. HazPy tools automat
 
 ![HITT Load To Hazus](src/assets/images/LoadToHazus.jpg "HHIT Load To Hazus")
 
+6. In Hazus, please build or open an existing region and:
+   1. Select “{huScenarioName}”
+   2. Choose “Edit” so that Hazus will check and validate imported data.
+   3. Select Next and proceed through Hazus wizard until new scenario is saved.
+
+![HITT Next Steps](src/assets/images/NextSteps.png "HHIT Next Steps")
+
 ## Requirements
 
 The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be installed on your computer and an active internet connection. Anaconda is a free software that automatically manages all Python packages required to run Hazus open source tools - including the Hazus Python package: https://fema-nhrap.s3.amazonaws.com/Hazus/Python/build/html/index.html
