@@ -3,6 +3,18 @@ The Hazus Hurrevac Import Tool is a tool to download individual Hurrevac Storm d
 
 The HITT is developed using the Hazus Python Package, HazPy. HazPy tools automatically check for updates each time they are opened. Hazus Python Package documentation is found here: https://github.com/nhrap-hazus/hazus
 
+## Requirements
+
+The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be installed on your computer and an active internet connection. Anaconda is a free software that automatically manages all Python packages required to run Hazus open source tools - including the Hazus Python package: https://fema-nhrap.s3.amazonaws.com/Hazus/Python/build/html/index.html
+
+1. Go to https://www.anaconda.com/distribution/
+
+2. Download Anaconda for Python 3
+
+3. Complete the installation. During installation, make sure the following options are checked:
+   - [x] **Add Anaconda to my PATH environment variable**
+   - [x] Register Anaconda as my default Python
+
 ## To Use
 
 **Must have Anaconda 3.X installed. Please read requirements**
@@ -33,18 +45,6 @@ The HITT is developed using the Hazus Python Package, HazPy. HazPy tools automat
    3. Select Next and proceed through Hazus wizard until new scenario is saved.**
 
 ![HITT Next Steps](src/assets/images/NextSteps.png "HHIT Next Steps")
-
-## Requirements
-
-The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be installed on your computer and an active internet connection. Anaconda is a free software that automatically manages all Python packages required to run Hazus open source tools - including the Hazus Python package: https://fema-nhrap.s3.amazonaws.com/Hazus/Python/build/html/index.html
-
-1. Go to https://www.anaconda.com/distribution/
-
-2. Download Anaconda for Python 3
-
-3. Complete the installation. During installation, make sure the following options are checked:
-   - [x] **Add Anaconda to my PATH environment variable**
-   - [x] Register Anaconda as my default Python
 
 ## Documentation
 
