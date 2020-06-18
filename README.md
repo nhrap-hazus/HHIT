@@ -11,15 +11,13 @@ The Hazus Hurravac Import Tool loads the Hurrevac Storm data of your choosing to
 
 1. Download zip folder of tool from GitHub, unzip
 
-2. Double-click "hazus-hurrevac-import-tool.py"
+2. Double-click "hazus-hurrevac-import-tool.py". If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-export-tool.py" again
 
-3. If you don't have the Hazus Python Library installed you will need to install it. (!INSERT HOW TO DO THAT OR FOLLOW export tools method)
+3. Select a combination of storm type, basin and year to see a list of available storms. Select the storm from the drop down list.
 
-4. Select a combination of storm type, basin and year to see a list of available storms. Select the storm from the drop down list.
+4. Alternatively if you know the Hurrevac storm id, enter it in the entry box.
 
-5. Alternatively if you know the Hurrevac storm id, enter it in the entry box.
-
-6. Click the 'Load to Hazus' button to load your selected storm from the list or your entered storm id to your Hazus database.
+5. Click the 'Load to Hazus' button to load your selected storm from the list or your entered storm id to your Hazus database.
 
 ## Requirements
 
