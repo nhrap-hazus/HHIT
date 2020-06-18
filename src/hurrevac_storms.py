@@ -18,24 +18,10 @@ try:
 except:
     with open("./src/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
-
+    
 def popupmsg(msg):
-    NORM_FONT= ("Tahoma", 12)
-    popup = tk.Toplevel()
-    popup.wm_title("!")
-    # Gets the requested values of the height and width.
-    windowWidth = popup.winfo_reqwidth()
-    windowHeight = popup.winfo_reqheight()
-    # Gets both half the screen width/height and window width/height
-    positionRight = int(popup.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(popup.winfo_screenheight()/3 - windowHeight/2)
-    # Positions the window in the center of the page.
-    popup.geometry("+{}+{}".format(positionRight, positionDown))
-    label = ttk.Label(popup, text=msg, font=NORM_FONT)
-    label.pack(side="top", fill="x", pady=10)
-    B1 = ttk.Button(popup, text="Okay", command = popup.destroy)
-    B1.pack()
-    popup.mainloop()
+    tk.messagebox.showinfo(message=msg)
+    logging.debug("Running popupmsg")
 
 def get_key(val, my_dict): 
     for key, value in my_dict.items(): 
@@ -52,6 +38,7 @@ class StormsInfo:
         self.GetStormsBasins()
     
     def GetStormsJSON(self):
+        logging.debug("Running GetStormsJSON")
         openUrl = urllib.request.urlopen(hurrevacSettings['HurrevacStormsURL'])
         
         if(openUrl.getcode()==200):
@@ -62,6 +49,7 @@ class StormsInfo:
             logging.error("Error receiving data", openUrl.getcode())
             
     def GetStormsTypes(self):
+        logging.debug("Running GetStormsTypes")
         #working with json
         StormTypes = hurrevacSettings['ShowStormTypes']
         StormTypesList = []
@@ -72,12 +60,14 @@ class StormsInfo:
         self.types = tuple(StormTypesList)
 
     def GetStormsBasins(self):
+        logging.debug("Running GetStormsBasins")
         #working with json
         StormBasins = hurrevacSettings['BasinsDictionary']
         StormBasinsLabels = list(StormBasins.values())
         self.basins = tuple(StormBasinsLabels)
 
     def GetStormsYears(self):
+        logging.debug("Running GetStormsYears")
         #working with json
         yearList = []
         for i in self.JSON:
@@ -95,6 +85,7 @@ class StormsInfo:
     #     self.optimizeStormTrack = hurrevacSettings['OptimizeStormTrack']
     
     def GetStormNames(self, stormTypes, basinLabel, year):
+        logging.debug("Running GetStormNames")
         '''Get basins code from label in settings.json'''
         '''It would be nice to sort storms by alphabet then greek alphabet 
            when there are more than 26 storms'''
@@ -150,6 +141,7 @@ class StormsInfo:
 
 class StormInfo:
     def GetStormJSON(self, StormId):
+        logging.debug("Running GetStormJSON")
         self.Id = StormId
         #from internet
         #attribute and used as input to GetStormDataframe
@@ -160,15 +152,16 @@ class StormInfo:
             stormdata = openUrl.read()
             stormJSON = json.loads(stormdata)
             if len(stormJSON) == 0:
-                popupmsg("Incorrect StormID")
+                popupmsg("StormID not found.")
                 logging.warning("stormJSON length is 0, possible incorrect stormid")
             else:
                 self.JSON = stormJSON
         else:
             popupmsg("Error receiving data. Check settings.json url or site is down or changed.")
-            logging.error("Error receiving data", openUrl.getcode())
+            logging.error("Error receiving data: %s" % openUrl.getcode())
 
     def GetStormDataframe(self, stormJSON):
+        logging.debug("Running GetStormDataframe")
         #from other python script
         #attribute and used as input to ExportToJSON
         stormDataframes = hurrevac_storm.processStormJSON(stormJSON)

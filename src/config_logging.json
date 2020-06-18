@@ -12,7 +12,7 @@
    },
   "handlers":{
    "file_handler": {
-	"level": "INFO",
+	"level": "DEBUG",
 	"class": "logging.FileHandler",
 	"formatter": "verbose",
 	"filename": "./log/hhit.log",
@@ -24,7 +24,7 @@
    },
    "root": {
     "handlers": ["file_handler"],
-    "level": "INFO"
+    "level": "DEBUG"
     }
  }
 }

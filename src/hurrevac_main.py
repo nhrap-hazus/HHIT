@@ -34,8 +34,10 @@ except:
 
 def popupmsg(msg):
     tk.messagebox.showinfo(message=msg)
+    logging.debug("Running popupmsg")
 
 def popupmsgNextSteps(msg):
+    logging.debug("Running popupmsgNextSteps")
     NORM_FONT= ("Tahoma", 12)
     popup = tk.Toplevel()
     popup.grab_set()
@@ -125,6 +127,7 @@ def get_key(val, my_dict):
         
 def CheckScenarioName(huScenarioName):
     '''hazpy method'''
+    logging.debug("Running CheckScenarioName")
     try:       
         z = hazpy_common.HazusDB()
         z.createWriteConnection(databaseName='syHazus')
@@ -132,9 +135,11 @@ def CheckScenarioName(huScenarioName):
         scenariosDF = pd.read_sql_table(table_name="huScenario", con=conn)
         scenariosList = scenariosDF['huScenarioName'].values.tolist()
         if huScenarioName not in scenariosList:
+            logging.debug("ScenarioName does not exist")
             return True
         else:
             popupmsg(f'Scenario "{huScenarioName}" already exists.\nPlease use "Hazus Hurricane Scenario Wizard" to edit or delete.')
+            logging.debug("ScenarioName exists, need to edit the name or delete.")
             return False
     except Exception as e:
         popupmsg(f"Error checking {huScenarioName} in Hazus.")
@@ -143,20 +148,22 @@ def CheckScenarioName(huScenarioName):
         
 def ExportToHazus(huScenarioName, huScenario, huStormTrack):
     '''hazpy method'''
+    logging.debug("Running ExportToHazus")
     try:
         z = hazpy_common.HazusDB()
         z.createWriteConnection(databaseName='syHazus')
         conn = z.writeConn
+        logging.debug("Created database connection")
     except Exception as e:
         popupmsg("Error connecting to Hazus SQL Server.")
         logging.error("Error connecting to Hazus SQL Server.")
         logging.error(e)
     huScenarioDoesntExist = CheckScenarioName(huScenarioName)
     if huScenarioDoesntExist:
-        logging.info(f'scenario "{huScenarioName}" does not exist in huScenario, proceed')
         try:
             z.appendData(dataframe=huScenario, tableName='huScenario')
             z.appendData(dataframe=huStormTrack, tableName='huStormTrack')
+            logging.debug(f"Appended {huScenarioName} to Hazus")
             popupmsgNextSteps(f'''Scenario "{huScenarioName}" is now available in Hazus.
                   
 Please build or open an existing region and:

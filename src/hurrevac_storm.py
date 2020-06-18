@@ -19,14 +19,18 @@ import logging
 try:
     with open("hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
+    logging.debug("Opening hurrevac_settings.json")
 except:
     with open("./src/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
+    logging.debug("Opening ./src/hurrevac_settings.json")
     
 def popupmsg(msg):
     tk.messagebox.showinfo(message=msg)
+    logging.debug("Running popupmsg")
 
 def processStormJSON(inputJSON):
+    logging.debug("Running processStormJSON")
     try:
         def distance(lat1, lat2, lon1, lon2): 
             # The math module contains a function named 
@@ -721,6 +725,7 @@ def processStormJSON(inputJSON):
         huScenarioName = df_huScenario['huScenarioName'].unique().tolist()[0]
         huStormTrack = df_huStormTrack
         huScenario = df_huScenario
+        logging.debug(f"Processed: {huScenarioName}")
         return huScenarioName, huScenario, huStormTrack
     
     except Exception as e:
