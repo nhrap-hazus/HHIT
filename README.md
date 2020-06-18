@@ -48,6 +48,12 @@ The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be install
 
 ## Documentation
 
+- Note that if the tool is open and a new storm is activated, you will need to close/quit the tool and reopen it to see the new storm in the list.
+
+Custimization (for advanced users comfortable editing JSON):
+-The default settings for Storm Type can be changed in the /src/hurrevac_settings.json. Check and uncheck Types.
+-The default settings for Storm Basins can be changed in the /src/hurrevac_settings.json. Reorder, add or remove basins.
+
 ## Contact
 
 Issues can be reported through the repository on Github (https://github.com/nhrap-dev/Hurrevac)
