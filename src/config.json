@@ -31,13 +31,13 @@
   "release": "dev",
   "prod": {
     "hazusInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/hazus/master/hazus/__init__.py",
-    "repoZipfileUrl": "https://github.com/nhrap-hazus/Hurrevac/archive/master.zip",
-    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/Hurrevac/master/src/__init__.py"
+    "repoZipfileUrl": "https://github.com/nhrap-hazus/HHIT/archive/master.zip",
+    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/HHIT/master/src/__init__.py"
   },
   "dev": {
     "hazusInitUrl": "https://raw.githubusercontent.com/nhrap-dev/hazpy/master/hazpy/__init__.py",
-    "repoZipfileUrl": "https://github.com/nhrap-dev/Hurrevac/archive/master.zip",
-    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-dev/Hurrevac/master/src/__init__.py"
+    "repoZipfileUrl": "https://github.com/nhrap-dev/HHIT/archive/master.zip",
+    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-dev/HHIT/master/src/__init__.py"
   },
   "proxies": {
     "fema": "http://proxy.apps.dhs.gov:80"
