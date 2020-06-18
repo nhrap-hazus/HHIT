@@ -23,7 +23,7 @@ The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be install
 
 ![Download HITT](src/assets/images/DownloadHITT.jpg "Download HITT") 
 
-**2. Double-click "hazus-hurrevac-import-tool.py". If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again. If you have an older version of the HITT tool, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again**
+**2. Double-click "hazus-hurrevac-import-tool.py".** If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again. If you have an older version of the HITT tool, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again
 
 ![Run HITT](src/assets/images/RunHITT.jpg "Run HITT") 
 
