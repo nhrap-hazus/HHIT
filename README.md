@@ -7,30 +7,30 @@ The HITT is developed using the Hazus Python Package, HazPy. HazPy tools automat
 
 **Must have Anaconda 3.X installed. Please read requirements**
 
-1. Download zip folder of tool from GitHub, unzip
+**1. Download zip folder of tool from GitHub, unzip**
 
 ![Download HITT](src/assets/images/DownloadHITT.jpg "Download HITT") 
 
-2. Double-click "hazus-hurrevac-import-tool.py". If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again. If you have an older version of the HITT tool, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again
+**2. Double-click "hazus-hurrevac-import-tool.py". If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again. If you have an older version of the HITT tool, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again**
 
 ![Run HITT](src/assets/images/RunHITT.jpg "Run HITT") 
 
-3. Select a combination of storm type, basin and year to see a list of available storms. Select the storm from the drop down list.
+**3. Select a combination of storm type, basin and year to see a list of available storms. Select the storm from the drop down list.**
 
 ![HITT Select Storm](src/assets/images/SelectStorm.jpg "HHIT Select Storm") 
 
-4. Alternatively if you know the Hurrevac storm id, enter it in the entry box.
+**4. Alternatively if you know the Hurrevac storm id, enter it in the entry box.**
 
 ![HITT Enter Storm](src/assets/images/EnterStorm.jpg "HHIT Enter Storm")
 
-5. Click the 'Load to Hazus' button to load your chosen storm to your Hazus database.
+**5. Click the 'Load to Hazus' button to load your chosen storm to your Hazus database.**
 
 ![HITT Load To Hazus](src/assets/images/LoadToHazus.jpg "HHIT Load To Hazus")
 
-6. In Hazus, please build or open an existing region and:
+**6. In Hazus, please build or open an existing region and:
    1. Select “{huScenarioName}”
    2. Choose “Edit” so that Hazus will check and validate imported data.
-   3. Select Next and proceed through Hazus wizard until new scenario is saved.
+   3. Select Next and proceed through Hazus wizard until new scenario is saved.**
 
 ![HITT Next Steps](src/assets/images/NextSteps.png "HHIT Next Steps")
 
