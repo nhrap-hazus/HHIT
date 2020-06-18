@@ -1,9 +1,7 @@
 # Hazus Hurrevac Import Tool (HHIT)
-A class to extract, transform and load Hurrevac tropical storm data.
-Currently it is a stand alone tool but may be intended as a class in HazPy.
-This is a work in progress.
+The Hazus Hurrevac Import Tool is a tool to download individual Hurrevac Storm data, process and load into your Hazus database to be used as Hurricane scenarios. Launch the tool by double-clicking the "hazus-hurrevac-import-tool.py" file in the download folder.
 
-The Hazus Hurravac Import Tool loads the Hurrevac Storm data of your choosing to your desktop Hazus database.
+The HITT is developed using the Hazus Python Package, HazPy. HazPy tools automatically check for updates each time they are opened. Hazus Python Package documentation is found here: https://github.com/nhrap-hazus/hazus
 
 ## To Use
 
@@ -11,7 +9,9 @@ The Hazus Hurravac Import Tool loads the Hurrevac Storm data of your choosing to
 
 1. Download zip folder of tool from GitHub, unzip
 
-2. Double-click "hazus-hurrevac-import-tool.py". If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-export-tool.py" again
+![Download HHIT](Images/Step1.png "Download HHIT")
+
+2. Double-click "hazus-hurrevac-import-tool.py". If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hazus-hurrevac-import-tool.py" again
 
 3. Select a combination of storm type, basin and year to see a list of available storms. Select the storm from the drop down list.
 
@@ -28,13 +28,13 @@ The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be install
 2. Download Anaconda for Python 3
 
 3. Complete the installation. During installation, make sure the following options are checked:
-    Add Anaconda to my PATH environment variable
-    Register Anaconda as my default Python
+   - [x] **Add Anaconda to my PATH environment variable**
+   - [x] Register Anaconda as my default Python
 
 ## Documentation
 
 ## Contact
 
-Issues can be reported through the repository on Github (https://github.com/nhrap-dev/Hurrevac) (!WILL NEED TO UPDATE THIS)
+Issues can be reported through the repository on Github (https://github.com/nhrap-dev/Hurrevac)
 
-For questions contact Colin (!NEED TO UPDATE THIS) hazus-support@riskmapcds.com
+For questions contact hazus-support@riskmapcds.com
