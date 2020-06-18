@@ -23,7 +23,7 @@ The HITT is developed using the Hazus Python Package, HazPy. HazPy tools automat
 
 ![HITT Enter Storm](src/assets/images/EnterStorm.jpg "HHIT Enter Storm")
 
-5. Click the 'Load to Hazus' button to load your selected storm from the list or your entered storm id to your Hazus database.
+5. Click the 'Load to Hazus' button to load your chosen storm to your Hazus database.
 
 ![HITT Load To Hazus](src/assets/images/LoadToHazus.jpg "HHIT Load To Hazus")
 
