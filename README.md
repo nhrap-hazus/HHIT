@@ -53,6 +53,9 @@ The Hazus Export tool requires Hazus, ArcGIS Desktop, and Anaconda to be install
 Customization (for advanced users comfortable editing JSON):
 - The default settings for Storm Type can be changed in the /src/hurrevac_settings.json. Check and uncheck Types.
 - The default settings for Storm Basins can be changed in the /src/hurrevac_settings.json. Reorder, add or remove basins.
+- Optimize Track (on by default) truncates the head and tail points that are well below the tropical storm force and are not needing for analysis and are eliminated to make processing the windfields faster.
+
+![HITT Optimize Track](src/assets/images/Dorian2019OptimizedTrackComparison.JPG "HHIT Optimize Track")
 
 ## Contact
 
