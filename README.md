@@ -52,8 +52,8 @@ The HHIT requires Hazus, ArcGIS Desktop, Anaconda, and an active internet connec
 
 Customization (for advanced users comfortable editing JSON):
 - The default settings for Storm Type can be changed in the /src/hurrevac_settings.json. Check and uncheck Types.
-- The default settings for Storm Basins can be changed in the /src/hurrevac_settings.json. Reorder, add or remove basins.
-- "Optimize Track" truncates head and tail points with wind speeds significantly below tropical storm classification. These points are unnecessary for analysis and removal increases windfield processing speeds. "Optimize Track" is selected by default.
+- The default settings for Storm Basins can be changed in the /src/hurrevac_settings.json. Reorder, add or remove Basins.
+- "Optimize Track" truncates head and tail points with wind speeds significantly below tropical storm classification. These points are unnecessary for analysis and their removal increases windfield processing speeds. "Optimize Track" is selected by default.
 
 ![HITT Optimize Track](src/assets/images/Dorian2019OptimizedTrackComparison.JPG "HHIT Optimize Track")
 Hurricane Dorian (2019) optimized storm track; data points in orange portion of track were removed
