@@ -56,6 +56,7 @@ Customization (for advanced users comfortable editing JSON):
 - "Optimize Track" truncates head and tail points with wind speeds significantly below tropical storm classification. These points are unnecessary for analysis and removal increases windfield processing speeds. "Optimize Track" is selected by default.
 
 ![HITT Optimize Track](src/assets/images/Dorian2019OptimizedTrackComparison.JPG "HHIT Optimize Track")
+Hurricane Dorian (2019) optimized storm track
 
 ## Contact
 
