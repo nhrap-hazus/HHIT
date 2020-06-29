@@ -1,0 +1,18 @@
+Important order of operations in storm processing (hurrevac_storm.py):
+
+ Fill in intermediate values
+
+ MaxWindSpeed (convert knots to mph and apply HurrevacVmaxFactor; interim advisories are in knots)
+
+ RadiusToHurrWindType (miles, based on maxwindspeed) should run before inland adjustment to maxwindspeed.
+
+ RadiusToXWinds (34, 50, 64)
+
+ Interim advisory RadiusToXWinds, get previous row's value.
+
+ ZeroOut RadiusToXWinds (based on HurrWindType)
+
+ Inland adjustment to MaxWindSpeed (mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (first inland point not adjusted)
+
+ OptimizeTrack runs after all cacluations are finished and forecast points appended to main dataframe and before loading to sql server.
+

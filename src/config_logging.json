@@ -1,0 +1,30 @@
+{
+ "logging":{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters":{ 
+	"verbose": {
+    "class": "logging.Formatter",
+    "style": "{",
+    "datefmt": "%I:%M:%S",
+    "format": "{levelname:8s}; {process:5d}; {threadName:8s}; {asctime:s}; {name:<15s} {lineno:4d}; {message:s}"
+    }
+   },
+  "handlers":{
+   "file_handler": {
+	"level": "DEBUG",
+	"class": "logging.FileHandler",
+	"formatter": "verbose",
+	"filename": "./log/hhit.log",
+	"mode": "w",
+	"encoding": "utf-8"
+    }
+   },
+  "loggers":{
+   },
+   "root": {
+    "handlers": ["file_handler"],
+    "level": "DEBUG"
+    }
+ }
+}
