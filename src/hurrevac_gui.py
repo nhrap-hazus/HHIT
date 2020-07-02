@@ -6,7 +6,7 @@ Created on Tue Apr 28 13:01:01 2020
 
 Not intended to be imported into another script or gui.
 """
-print('starting imports')
+print('starting imports...')
 #This area is slow
 import re
 
@@ -93,6 +93,7 @@ def vp_start_gui():
     print("starting top...")
     top = Hazus_HurrEvac_HVX_ETL(root)
     print("finished top.")
+    print("starting mainloop...")
     root.mainloop()
 
 
