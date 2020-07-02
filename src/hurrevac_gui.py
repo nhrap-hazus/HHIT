@@ -79,16 +79,7 @@ def vp_start_gui():
     #what does this do?global val, w, root???
     global val, w, root
     root = tk.Tk()
-    
-    # # Gets the requested values of the height and width.
-    # windowWidth = root.winfo_reqwidth()
-    # windowHeight = root.winfo_reqheight()
-    # # Gets both half the screen width/height and window width/height
-    # positionRight = int(root.winfo_screenwidth()/2 - windowWidth/2)
-    # positionDown = int(root.winfo_screenheight()/3 - windowHeight/2)
-    # # Positions the window in the center of the page.
-    # root.geometry("+{}+{}".format(positionRight, positionDown))
-    
+        
     #what does this do?
     print("starting top...")
     top = Hazus_HurrEvac_HVX_ETL(root)
