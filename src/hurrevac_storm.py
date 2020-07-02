@@ -348,10 +348,26 @@ def processStormJSON(inputJSON):
         '''NewRadiusTo34KWinds'''
         #pass
         
+        '''bInland points cannot have maxwindspeed increase'''
+        # see also forecasts
+        try:
+            for i in df.index:
+                if i == 0:
+                    '''First row won't have a previous'''
+                    logging.debug(f"{i} first row TimeStep: {df.loc[i, 'TimeStep']}")
+                    pass
+                elif df.loc[i, 'bInland'] == 1 and df.loc[i-1, 'bInland'] == 1 and df.loc[i, 'MaxWindSpeed'] > df.loc[i-1, 'MaxWindSpeed']:
+                    logging.debug(f"{i} inland and currrent maxwindspeed is greater than previous bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+                    df.loc[i, 'MaxWindSpeed'] = df.loc[i-1, 'MaxWindSpeed']
+                else:
+                    logging.debug(f"{i} else: bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+                    pass
+        except Exception as e:
+            logging.warning('bInland no increase in maxwindspeed over land issue')
+            logging.warning(e)
+        
         '''bInland MaxWindSpeed Adjustment'''
-        '''may remove after testing as it might be related to interim advisories provided in mph, not knots'''
-        # '''Don't adjust first inland point (stm appears to not adjust)'''
-        #if under 40, set to 40 instead of *1.15
+        '''the 15% increase for inland provides a way to represent what the intensity could be if the inland points were overwater'''
         try:
             previousInland = None
             for i in df.index:
@@ -359,6 +375,11 @@ def processStormJSON(inputJSON):
                 if i == 0:
                     '''First row won't have a previous'''
                     pass
+                elif currentInland == 1 and previousInland == 0:
+                    '''if 1st inland point has > MWS and < CP than the last sea point then don't adjust by 15%, otherwise adjust by 15%'''
+                    '''We are treating the first inland point as being over water if the forecast is still intensifying. '''
+                    if df.loc[i, 'MaxWindSpeed'] < df.loc[i-1, 'MaxWindSpeed'] and df.loc[i, 'CentralPressure'] > df.loc[i-1, 'CentralPressure']:
+                        df.loc[i, 'MaxWindSpeed'] = df.loc[i, 'MaxWindSpeed'] * 1.15
                 elif currentInland == 1 and previousInland == 1:
                     '''change all but the first row that has inland'''
                     if df.loc[i, 'MaxWindSpeed'] < 40:
@@ -411,6 +432,7 @@ def processStormJSON(inputJSON):
             dfForecasts.drop(columns=['startDateTime'], inplace=True)
         
             # '''bInland Status method'''
+            #DISABLED IN FAVOR OF SPATIAL CHECK
             # dfForecasts['bInland'] = 0
             # def TESTforecastInland(row):
             #     try:
@@ -561,6 +583,23 @@ def processStormJSON(inputJSON):
                 logging.warning('Forecast centralPressure:')
                 logging.warning(e)
                 
+            '''Forecast bInland points cannot have maxwindspeed increase'''
+            try:
+                for i in dfForecasts.index:
+                    if i == 0:
+                        '''First row won't have a previous'''
+                        logging.debug(f'{i} first row')
+                        pass
+                    elif dfForecasts.loc[i, 'bInland'] == 1 and dfForecasts.loc[i-1, 'bInland'] == 1 and dfForecasts.loc[i, 'MaxWindSpeed'] > dfForecasts.loc[i-1, 'MaxWindSpeed']:
+                        logging.debug(f"{i} inland and currrent maxwindspeed is greater than previous bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+                        dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i-1, 'MaxWindSpeed']
+                    else:
+                        logging.debug(f"{i} else: bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+                        pass
+            except Exception as e:
+                logging.warning('Forecast bInland no increase in maxwindspeed over land issue')
+                logging.warning(e)
+                
             '''Forecast bInland MaxWindSpeed Adjustment'''
             try:
                 previousInland = None
@@ -569,6 +608,10 @@ def processStormJSON(inputJSON):
                     if i == 0:
                         '''First row won't have a previous'''
                         pass
+                    elif currentInland == 1 and previousInland == 0:
+                        '''if 1st inland point has > MWS and < CP than the last sea point then don't adjust by 15%, otherwise adjust by 15%'''
+                        if dfForecasts.loc[i, 'MaxWindSpeed'] < dfForecasts.loc[i-1, 'MaxWindSpeed'] and dfForecasts.loc[i, 'CentralPressure'] > dfForecasts.loc[i-1, 'CentralPressure']:
+                            dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i, 'MaxWindSpeed'] * 1.15
                     elif currentInland == 1 and previousInland == 1:
                         '''change all but the first row that has inland'''
                         if dfForecasts.loc[i, 'MaxWindSpeed'] < 40:
