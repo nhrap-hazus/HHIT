@@ -1,6 +1,6 @@
 {
 	"HurrevacSettings": "",
-	"OptimizeStormTrack":0,
+	"OptimizeStormTrack":1,
 	"BasinsDictionary": {"al":"Atlantic",
 						"cp":"Central Pacific",
 						"ep":"Eastern Pacific"},
