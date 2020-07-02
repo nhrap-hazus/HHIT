@@ -90,9 +90,9 @@ def vp_start_gui():
     # root.geometry("+{}+{}".format(positionRight, positionDown))
     
     #what does this do?
-    print("starting top")
+    print("starting top...")
     top = Hazus_HurrEvac_HVX_ETL(root)
-    print("finished top")
+    print("finished top.")
     root.mainloop()
 
 
@@ -176,9 +176,9 @@ class Hazus_HurrEvac_HVX_ETL():
                 hurrevac_main.ExportToHazus(self.storm.huScenarioName, self.storm.huScenario, self.storm.huStormTrack)
         
         '''Get Storms values to prepopulate lists...'''
-        print('get storm values')
+        print('get storm values...')
         self.storms = hurrevac_storms.StormsInfo()
-        print('got storm values')
+        print('got storm values.')
         self.stormTypes = tuple(self.storms.types)
         self.stormBasins = tuple(self.storms.basins)
         self.stormYears = tuple(self.storms.years)
@@ -302,6 +302,6 @@ class Hazus_HurrEvac_HVX_ETL():
         center(root)
         
 if __name__ == '__main__':
-    print('start vp gui')
+    print('starting gui...')
     vp_start_gui()
-    print('end vp gui')
+    print('gui started.')
