@@ -1,28 +1,58 @@
 Important order of operations in storm processing (hurrevac_storm.py):
 
- 1 Process Advisory points
+1 Process Advisory points
 
-   Fill in intermediate values
+    Calculate fields (TimeStep, etc)
+   
+        Spatial intersect to determine if inland or not
+	   
+	    Convert MaxWindSpeed from knots to miles per hour, reduce by HurrevacVmaxFactor from settings
+	   
+	    RadiusToHurrWindsType (Use the MaxWindSpeed in mph*HurrevacVmaxFactor to determine)
+	   
+		RadiusToXWinds (34, 50, 64)()
 
-   MaxWindSpeed (convert knots to mph and apply HurrevacVmaxFactor; interim advisories are in knots)
+        Fill in intermediate values
 
-   RadiusToHurrWindType (miles, based on maxwindspeed) should run before inland adjustment to maxwindspeed.
+		Interim advisory RadiusToXWinds, get previous row's value.
 
-   RadiusToXWinds (34, 50, 64)
+		ZeroOut RadiusToXWinds (based on HurrWindType)
 
-   Interim advisory RadiusToXWinds, get previous row's value.
+		Inland can not increase in MWS, if current row value is greater than previous row value, set current rows value to previous rows value
 
-   ZeroOut RadiusToXWinds (based on HurrWindType)
+		Inland adjustment to MaxWindSpeed (mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (first inland point not adjusted)
 
-   Inland can not increase in MWS, if current row value is greater than previous row value, set current rows value to previous rows value
+2 Process Forecast points
+ 
+	Calculate fields (TimeStep, etc)
+	
+		Spatial intersect to determine if inland or not
+		
+		Convert MaxWindSpeed from knots to miles per hour, reduce by HurrevacVmaxFactor from settings
+		
+		RadiusToHurrWindsType (Use the MaxWindSpeed in mph*HurrevacVmaxFactor to determine)
+		
+		ZeroOut RadiusToXWinds (based on HurrWindType)
+		
+		Inland can not increase in MWS, if current row value is greater than previous row value, set current rows value to previous rows value
 
-   Inland adjustment to MaxWindSpeed (mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (first inland point not adjusted)
+		Inland adjustment to MaxWindSpeed (mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (first inland point not adjusted)
+		
+		Cleanup Forecast data frame before appending to main advisory dataframe
 
- 2 Process Forecast points
+3 Merge Forecast points to Advisory points
 
-   Merge Forecast points to Advisory points
+4 Threshold checks and data conditiong
+	
+	Delete rows with 0,0 lat, long values
+	
+	MaxWindSpeed needs to be 40 or higher
+	
+	Radius to 34k winds needs to be 30 or higher (where the RadiusToHurrWindsType = T and RadiusTo34KWinds is 0)
+	
+5 Trim and format advisory dataframe
 
- 3 OptimizeTrack runs after all cacluations are finished and forecast points appended to main dataframe and before loading to sql server.
+6 OptimizeTrack runs after all cacluations are finished and forecast points appended to main dataframe and before loading to sql server.
 
 
 Potential Risk:
