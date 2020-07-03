@@ -2,7 +2,7 @@ Important order of operations in storm processing (hurrevac_storm.py):
 
 1 Process Advisory points
 
-    Calculate fields (TimeStep, etc)
+    Calculate fields (TimeStep,etc)
    
         Spatial intersect to determine if inland 
 	   
