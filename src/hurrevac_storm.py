@@ -378,7 +378,7 @@ def processStormJSON(inputJSON):
                 elif currentInland == 1 and previousInland == 0:
                     '''if 1st inland point has > MWS and < CP than the last sea point then don't adjust by 15%, otherwise adjust by 15%'''
                     '''We are treating the first inland point as being over water if the forecast is still intensifying. '''
-                    if df.loc[i, 'MaxWindSpeed'] < df.loc[i-1, 'MaxWindSpeed'] and df.loc[i, 'CentralPressure'] > df.loc[i-1, 'CentralPressure']:
+                    if df.loc[i, 'MaxWindSpeed'] <= df.loc[i-1, 'MaxWindSpeed'] and df.loc[i, 'CentralPressure'] >= df.loc[i-1, 'CentralPressure']:
                         df.loc[i, 'MaxWindSpeed'] = df.loc[i, 'MaxWindSpeed'] * 1.15
                 elif currentInland == 1 and previousInland == 1:
                     '''change all but the first row that has inland'''
@@ -610,7 +610,7 @@ def processStormJSON(inputJSON):
                         pass
                     elif currentInland == 1 and previousInland == 0:
                         '''if 1st inland point has > MWS and < CP than the last sea point then don't adjust by 15%, otherwise adjust by 15%'''
-                        if dfForecasts.loc[i, 'MaxWindSpeed'] < dfForecasts.loc[i-1, 'MaxWindSpeed'] and dfForecasts.loc[i, 'CentralPressure'] > dfForecasts.loc[i-1, 'CentralPressure']:
+                        if dfForecasts.loc[i, 'MaxWindSpeed'] <= dfForecasts.loc[i-1, 'MaxWindSpeed'] and dfForecasts.loc[i, 'CentralPressure'] >= dfForecasts.loc[i-1, 'CentralPressure']:
                             dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i, 'MaxWindSpeed'] * 1.15
                     elif currentInland == 1 and previousInland == 1:
                         '''change all but the first row that has inland'''
