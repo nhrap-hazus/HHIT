@@ -22,8 +22,8 @@ tool_version_url = config[release]['toolInitUrl']
 tool_zipfile_url = config[release]['repoZipfileUrl']
 tool_version_local = './src/__init__.py'
 conda_env = 'hazus_env'
-conda_channel = 'nhrap-dev'
-python_package = 'hazpy'
+conda_channel = 'nhrap' #This will change to nhrap-dev once hazpydev is deployed to it
+python_package = 'hazpydev'
 httpTimeout = 0.6  # in seconds
 
 
