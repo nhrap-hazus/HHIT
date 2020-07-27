@@ -12,8 +12,10 @@ The HHIT requires Hazus, ArcGIS Desktop, Anaconda, and an active internet connec
 2. Download Anaconda for Python 3
 
 3. Complete the installation. During installation, make sure the following options are checked:
+
    - [x] **Add Anaconda to my PATH environment variable**
    - [x] Register Anaconda as my default Python
+   - [x] Install Anaconda for local user, rather than all users
 
 ## To Use
 
