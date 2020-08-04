@@ -25,11 +25,13 @@ tool_version_url = config[release]['toolInitUrl']
 tool_zipfile_url = config[release]['repoZipfileUrl']
 conda_channel = config[release]['condaChannel']
 python_package = config[release]['pythonPackage']
+python_version = config[release]['pythonVersion']
 virtual_environment = config[release]['virtualEnvironment']
 http_timeout = config[release]['httpTimeout']  # in seconds
 
 # init message dialog box
 messageBox = ctypes.windll.user32.MessageBoxW
+
 
 def createProxyEnv():
     """ Creates a copy of the os environmental variables with updated proxies
@@ -64,8 +66,7 @@ def condaInstallHazPy():
             try:
                 print('Creating the conda ' + virtual_environment)
                 handleProxy()
-                call('echo y | conda create -y -n ' +
-                     virtual_environment, shell=True)
+                call('echo y | conda create -y -n {ve} python={pv}'.format(ve=virtual_environment, pv=python_version), shell=True)
             except:
                 call('conda deactivate && conda env remove -n ' +
                      virtual_environment, shell=True)
@@ -73,13 +74,10 @@ def condaInstallHazPy():
         print('Installing ' + python_package)
         handleProxy()
         try:
-            check_call('CALL conda.bat activate ' + virtual_environment +
-                       ' && echo y | conda install ' + python_package + ' -f', shell=True)
+            check_call('CALL conda.bat activate {ve} && echo y | conda install -c {c} {p} --force-reinstall'.format(ve=virtual_environment, c=conda_channel, p=python_package), shell=True)
         except:
-            call('echo y | conda create -y -n ' +
-                 virtual_environment, shell=True)
-            check_call('CALL conda.bat activate ' + virtual_environment +
-                       ' && echo y | conda install ' + python_package + ' -f', shell=True)
+            call('echo y | conda create -y -n {ve} python={pv}'.format(ve=virtual_environment, pv=python_version), shell=True)
+            check_call('CALL conda.bat activate {ve} && echo y | conda install -c {c} {p} --force-reinstall'.format(ve=virtual_environment, c=conda_channel, p=python_package), shell=True)
 
         messageBox(0, u'The ' + python_package +
                    u" python package was successfully installed! The update will take effect when the tool is reopened.", u"HazPy", 0x1000)
@@ -89,7 +87,7 @@ def condaInstallHazPy():
 
 
 def createHazPyEnvironment():
-    print("Get in here")
+
     returnValue = messageBox(None, u'The ' + python_package +
                              u" python package is required to run this tool. Would you like to install it now?", u"HazPy", 0x1000 | 0x4)
     try:
@@ -123,26 +121,26 @@ def createHazPyEnvironment():
 def checkForHazPyUpdates():
 
     try:
-        installedVersion = pkg_resources.get_distribution(
-            python_package).version
-
+        installedVersion = pkg_resources.get_distribution(python_package).version
         handleProxy()
         req = requests.get(hazpy_version_url, timeout=http_timeout)
+        status = req.status_code
 
-        newestVersion = parseVersionFromInit(req.text)
-        if newestVersion != installedVersion:
-            returnValue = messageBox(None, u"A new version of the " + python_package +
-                                     u" python package was found. Would you like to install it now?", u"HazPy", 0x1000 | 0x4)
-            if returnValue == 6:
-                messageBox(
-                    0, u'Updates are installing. We will let you know when its done!', u"HazPy", 0x1000)
-                condaInstallHazPy()
+        if status == 200:
+            newestVersion = parseVersionFromInit(req.text)
+            if newestVersion != installedVersion:
+                returnValue = messageBox(None, u"A new version of the " + python_package +
+                                        u" python package was found. Would you like to install it now?", u"HazPy", 0x1000 | 0x4)
+                if returnValue == 6:
+                    messageBox(
+                        0, u'Updates are installing. We will let you know when its done!', u"HazPy", 0x1000)
+                    condaInstallHazPy()
+            else:
+                print(python_package + ' is up to date')
         else:
-            print(python_package + ' is up to date')
+            print('Unable to connect to the url: ' + hazpy_version_url)
     except:
-        # testing pass
-        pass
-        # createHazPyEnvironment()
+        createHazPyEnvironment()
 
 
 def checkForToolUpdates():
@@ -155,20 +153,22 @@ def checkForToolUpdates():
 
         handleProxy()
         req = requests.get(tool_version_url, timeout=http_timeout)
+        status = req.status_code
 
-        newestVersion = parseVersionFromInit(req.text)
-        if newestVersion != installedVersion:
-            returnValue = messageBox(
-                None, u"A new version of the tool was found. Would you like to install it now?", u"HazPy", 0x1000 | 0x4)
-            if returnValue == 6:
-                print('updating tool')
-                updateTool()
+        if status == 200:
+            newestVersion = parseVersionFromInit(req.text)
+            if newestVersion != installedVersion:
+                returnValue = messageBox(
+                    None, u"A new version of the tool was found. Would you like to install it now?", u"HazPy", 0x1000 | 0x4)
+                if returnValue == 6:
+                    print('updating tool')
+                    updateTool()
+            else:
+                print('Tool is up to date')
         else:
-            print('Tool is up to date')
+            print('Unable to connect to url: ' + tool_version_url)
     except:
-        # testing pass
-        pass
-        # messageBox(0, 'Unable to check for tool updates. If this error persists, contact hazus-support@riskmapcds.com for assistance.', "HazPy", 0x1000)
+        messageBox(0, 'Unable to check for tool updates. If this error persists, contact hazus-support@riskmapcds.com for assistance.', "HazPy", 0x1000)
 
 
 def updateTool():
