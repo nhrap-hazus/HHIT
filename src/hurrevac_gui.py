@@ -85,6 +85,7 @@ def vp_start_gui():
     top = Hazus_HurrEvac_HVX_ETL(root)
     print("finished top.")
     print("starting mainloop...")
+    root.lift()
     root.mainloop()
 
 
