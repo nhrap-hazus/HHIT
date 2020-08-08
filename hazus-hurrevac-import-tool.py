@@ -17,20 +17,20 @@ try:
     release = config['release']
     virtual_env = config[release]['virtualEnvironment']
     res = call('CALL conda.bat activate ' + virtual_env, shell=True)
-    print(res)
+    #print(res)
     if res == 1:
         # create the virtual environment
-        print(2)
+        #print(2)
         try:
             from src.manage import createHazPyEnvironment
         except:
             breakpoint()
         #from src.manage import createHazPyEnvironment
-        print(3)
+        #print(3)
         createHazPyEnvironment()
     else:
         call('CALL conda.bat activate '+ virtual_env +
-             ' && start /min python src/hurrevac_run.py', shell=True)
+             ' && start /min python src/hurrevac_gui.py', shell=True)
         call('CALL conda.bat activate '+ virtual_env +
              ' && start /min python src/update.py', shell=True)
 except:
