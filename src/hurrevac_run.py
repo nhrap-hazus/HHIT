@@ -1,3 +1,4 @@
+#Deprecated as of 08/07/2020
 try:
     from manage import internetConnected, checkForHazPyUpdates, checkForToolUpdates
     if internetConnected():
