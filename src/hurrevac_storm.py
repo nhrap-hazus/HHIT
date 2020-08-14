@@ -26,10 +26,28 @@ except:
     logging.debug("Opening ./src/hurrevac_settings.json")
     
 def popupmsg(msg):
+    """ Creates a tkinter popup message window
+
+        Keyword Arguments:
+            msg: str -- The message you want to display
+    """    
     tk.messagebox.showinfo(message=msg)
     logging.debug("Running popupmsg")
 
 def processStormJSON(inputJSON):
+    """ Transforms Hurrevac storm json into Hazus-schema compatible pandas dataframes
+
+        Keyword Arguments:
+            inputJSON: json -- Hurrevac individual storm json
+            
+        Returns:
+            huScenarioName: String
+            huScenario: pandas dataframe
+            huStormTrack: pandas dataframe
+
+        Note: That the return items huScenario and huStormTrack correspond to the Hazus
+        tables of the same name in syHazus.
+    """ 
     logging.debug("Running processStormJSON")
     try:
         def distance(lat1, lat2, lon1, lon2): 

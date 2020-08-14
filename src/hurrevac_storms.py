@@ -20,10 +20,25 @@ except:
         hurrevacSettings = json.load(f)
     
 def popupmsg(msg):
+    """ Creates a tkinter popup message window
+
+        Keyword Arguments:
+            msg: str -- The message you want to display
+    """    
     tk.messagebox.showinfo(message=msg)
     logging.debug("Running popupmsg")
 
-def get_key(val, my_dict): 
+def get_key(val, my_dict):
+    """ Check if a given value exists in a dictionary and
+        return it's key pairing
+
+        Keyword Arguments:
+            val: dictionary value
+            my_dict: dictionary
+
+        Returns:
+            key: string?
+    """    
     for key, value in my_dict.items(): 
          if val == value: 
              return key 
@@ -38,6 +53,8 @@ class StormsInfo:
         self.GetStormsBasins()
     
     def GetStormsJSON(self):
+        """ Populates JSON variable with json storms data from Hurrevac url
+        """
         logging.debug("Running GetStormsJSON")
         openUrl = urllib.request.urlopen(hurrevacSettings['HurrevacStormsURL'])
         
@@ -49,6 +66,8 @@ class StormsInfo:
             logging.error("Error receiving data", openUrl.getcode())
             
     def GetStormsTypes(self):
+        """ Populates the storm types dropdown
+        """
         logging.debug("Running GetStormsTypes")
         #working with json
         StormTypes = hurrevacSettings['ShowStormTypes']
@@ -60,6 +79,8 @@ class StormsInfo:
         self.types = tuple(StormTypesList)
 
     def GetStormsBasins(self):
+        """ Populates the storm basins dropdown
+        """
         logging.debug("Running GetStormsBasins")
         #working with json
         StormBasins = hurrevacSettings['BasinsDictionary']
@@ -67,6 +88,8 @@ class StormsInfo:
         self.basins = tuple(StormBasinsLabels)
 
     def GetStormsYears(self):
+        """ Populates the storm years dropdown
+        """
         logging.debug("Running GetStormsYears")
         #working with json
         yearList = []
@@ -85,6 +108,20 @@ class StormsInfo:
     #     self.optimizeStormTrack = hurrevacSettings['OptimizeStormTrack']
     
     def GetStormNames(self, stormTypes, basinLabel, year):
+        """ Acquires the names of storms from Hurrevac json data
+
+        Keyword Arguments:
+           stormTypes : tuple
+           basinLabel : tuple
+           year: tuple
+            
+        Returns:
+           stormNameStatusIDList : tuple
+
+        Note: There is logic to include/exclude and sort storms based on
+        basin, type and status.
+        """
+        
         logging.debug("Running GetStormNames")
         '''Get basins code from label in settings.json'''
         '''It would be nice to sort storms by alphabet then greek alphabet 
@@ -141,6 +178,11 @@ class StormsInfo:
 
 class StormInfo:
     def GetStormJSON(self, StormId):
+        """ Acquires an individual storms Hurrevac JSON data
+
+        Keyword Arguments:
+           StormId :string -- Hurrevac stormid
+        """
         logging.debug("Running GetStormJSON")
         self.Id = StormId
         #from internet
@@ -161,6 +203,12 @@ class StormInfo:
             logging.error("Error receiving data: %s" % openUrl.getcode())
 
     def GetStormDataframe(self, stormJSON):
+        """ Convert Hurrevac JSON of user's selected stormid into pandas dataframes using
+            another script
+
+        Keyword Arguments:
+           stormJSON : json
+        """
         logging.debug("Running GetStormDataframe")
         #from other python script
         #attribute and used as input to ExportToJSON
