@@ -31,8 +31,8 @@
   "release": "prod",
   "prod": {
     "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/hazpy/master/hazpy/__init__.py",
-    "repoZipfileUrl": "https://github.com/nhrap-hazus/HHIT/archive/test_hazpy001.zip",
-    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/HHIT/test_hazpy001/src/__init__.py",
+    "repoZipfileUrl": "https://github.com/nhrap-hazus/HHIT/archive/master.zip",
+    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/HHIT/master/src/__init__.py",
 	"virtualEnvironment": "hazus_env",
     "condaChannel": "nhrap",
     "pythonPackage": "hazpy",
