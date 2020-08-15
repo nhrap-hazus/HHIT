@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Hurrevac Load Tool
+    Hurrevac Import Tool
     ~~~~~
     FEMA NiyamIT built tool to load Hurrevac HVX storm data into Hazus Database.
 
@@ -10,4 +10,4 @@
 
 """
 
-__version__ = '0.0.9'
+__version__ = '0.0.1'
