@@ -33,10 +33,23 @@ except:
         hurrevacSettings = json.load(f)
 
 def popupmsg(msg):
+    """ Creates a tkinter popup message window
+
+        Keyword Arguments:
+            msg: str -- The message you want to display
+    """    
     tk.messagebox.showinfo(message=msg)
     logging.debug("Running popupmsg")
 
 def popupmsgNextSteps(msg):
+    """ Creates a tkinter popup message window
+
+        Keyword Arguments:
+            msg: str -- The message you want to display
+
+        Note: this one is intended to have the next steps graphic
+        and instructions
+    """    
     logging.debug("Running popupmsgNextSteps")
     NORM_FONT= ("Tahoma", 12)
     popup = tk.Toplevel()
@@ -70,8 +83,18 @@ def popupmsgNextSteps(msg):
     B1.grid(row=3,column=0,padx=10,pady=20)
     popup.mainloop()
 
-def get_key(val, my_dict): 
-    '''Currently not used'''
+def get_key(val, my_dict):
+    #Currently not used
+    """ Check if a given value exists in a dictionary and
+        return it's key pairing
+
+        Keyword Arguments:
+            val: dictionary value
+            my_dict: dictionary
+
+        Returns:
+            key: string?
+    """
     for key, value in my_dict.items(): 
          if val == value: 
              return key 
@@ -126,6 +149,14 @@ def get_key(val, my_dict):
 #             print(e)
         
 def CheckScenarioName(huScenarioName):
+    """ Checks if a huScenarioName exists in Hazus syHazus huScenario table
+
+        Keyword Arguments:
+            huScenarioName: string
+            
+        Returns:
+            boolean
+    """     
     '''hazpy method'''
     logging.debug("Running CheckScenarioName")
     try:       
@@ -147,6 +178,13 @@ def CheckScenarioName(huScenarioName):
         logging.error(e)
         
 def ExportToHazus(huScenarioName, huScenario, huStormTrack):
+    """ Appends Pandas dataframes to Hazus tables
+
+        Keyword Arguments:
+            huScenarioName: string
+            huScenario: Pandas dataframe
+            huStormTrack: Pandas dataframe
+    """     
     '''hazpy method'''
     logging.debug("Running ExportToHazus")
     try:

@@ -1,18 +1,59 @@
 Important order of operations in storm processing (hurrevac_storm.py):
 
- Fill in intermediate values
+1 Process Advisory points
 
- MaxWindSpeed (convert knots to mph and apply HurrevacVmaxFactor; interim advisories are in knots)
+    Calculate fields (TimeStep,etc)
+   
+        Spatial intersect to determine if inland 
+	   
+	    Convert MaxWindSpeed from knots to miles per hour, reduce by HurrevacVmaxFactor from settings (these reduction settings have been developed to represent an approximation on average storm intentisty parameters in each quadrant vs applying the maximum value throughout)
+	   
+	    RadiusToHurrWindsType (Use the MaxWindSpeed in mph*HurrevacVmaxFactor to determine)
+	   
+		RadiusToXWinds (34, 50, 64)(this classifies type of storm as hurricane, tropical storm or depression for the purpose of applying the windfield model)
 
- RadiusToHurrWindType (miles, based on maxwindspeed) should run before inland adjustment to maxwindspeed.
+        Fill in intermediate values
 
- RadiusToXWinds (34, 50, 64)
+		Interim advisory RadiusToXWinds, get previous row's value. (interim advisories provide only the MaxWindSpeed and location, other intensity values are filled in using the previous record)
 
- Interim advisory RadiusToXWinds, get previous row's value.
+		ZeroOut RadiusToXWinds (based on HurrWindType) (only the Radius to the type of storm classified based on the previous step is used in the analysis)
 
- ZeroOut RadiusToXWinds (based on HurrWindType)
+		Inland can not increase in MWS, if current row value is greater than previous row value, set current rows value to previous rows value (this is a validation step to prevent the accidental increase of MaxWindSpeed inland resulting from data entry errors)
 
- Inland adjustment to MaxWindSpeed (mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (first inland point not adjusted)
+		Inland adjustment to MaxWindSpeed (mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (note that the ARA windfield model employed by Hazus is based on points overwater, so a 15% increase adjustment factor is applied to the MaxWindSpeed, for first inland point is not increased if it is determined to be intensifying (MaxWind is greater and Central Pressure is less) than the last offshire point since this represents a storm whose center is over land but should be treated as primarily over water for the purpose of windfield modelling) 
 
- OptimizeTrack runs after all cacluations are finished and forecast points appended to main dataframe and before loading to sql server.
+2 Process Forecast points
+ 
+	Calculate fields (TimeStep, etc)
+	
+		Spatial intersect to determine if inland or not
+		
+		Convert MaxWindSpeed from knots to miles per hour, reduce by HurrevacVmaxFactor from settings (this classifies type of storm as hurricane, tropical storm or depression for the purpose of applying the windfield model)
+		
+		RadiusToHurrWindsType (Use the MaxWindSpeed in mph*HurrevacVmaxFactor to determine) 
+		
+		ZeroOut RadiusToXWinds (based on HurrWindType) (only the Radius to the type of storm classified based on the previous step is used in the analysis)
+		
+		Inland can not increase in MWS, if current row value is greater than previous row value, set current rows value to previous rows value (this is a validation step to prevent the accidental increase of MaxWindSpeed inland resulting from data entry errors)
 
+		Inland adjustment to MaxWindSpeed (mph and HurrevacVmaxFactor applied) adjusted by 1.15 if inland=1 (note that the ARA windfield model employed by Hazus is based on points overwater, so a 15% increase adjustment factor is applied to the MaxWindSpeed, for first inland point is not increased if it is determined to be intensifying (MaxWind is greater and Central Pressure is less) than the last offshire point since this represents a storm whose center is over land but should be treated as primarily over water for the purpose of windfield modelling) 
+		
+		Cleanup Forecast data frame before appending to main advisory dataframe
+
+3 Merge Forecast points to Advisory points
+
+4 Threshold checks and data conditiong (validation steps)
+	
+	Delete rows with 0,0 lat, long values
+	
+	MaxWindSpeed needs to be 40 or higher (validation fails with erroneous values or those under 40 mph and speeds under 50 mph do not influence losses)
+	
+	Radius to 34k winds needs to be 30 or higher (where the RadiusToHurrWindsType = T and RadiusTo34KWinds is 0) (required at validation step)
+	
+5 Trim and format advisory dataframe (optimizes analysis and shortens runtimes if points are left off head or tail of track that do not influence losses) 
+
+6 OptimizeTrack runs after all cacluations are finished and forecast points appended to main dataframe and before loading to sql server.
+
+
+Potential Risk:
+-Forecast points are calculated separate from advisory points, risk is that the forecast points may increase in MWS inland if there are data entry errors from the offical sources (considered low risk).
