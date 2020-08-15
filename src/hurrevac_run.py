@@ -1,10 +1,9 @@
+#Deprecated as of 08/07/2020
 try:
-    from manage import internetConnected, checkForHazusUpdates, checkForToolUpdates
+    from manage import internetConnected, checkForHazPyUpdates, checkForToolUpdates
     if internetConnected():
-        checkForHazusUpdates()
-        checkForToolUpdates()
         from subprocess import check_call
-        check_call('CALL conda.bat activate hazus_env && python .\src\hurrevac_gui.py', shell=True)
+        check_call('CALL conda.bat activate hazus_env && python src\hurrevac_gui.py', shell=True)
 
 except:
     import ctypes
