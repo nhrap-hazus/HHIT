@@ -35,6 +35,7 @@ messageBox = ctypes.windll.user32.MessageBoxW
 
 def createProxyEnv():
     """ Creates a copy of the os environmental variables with updated proxies
+
     Returns:
         newEnv: os.environ -- a copy of the os.environ that can be used in subprocess calls
     """
@@ -119,11 +120,14 @@ def createHazPyEnvironment():
 
 
 def checkForHazPyUpdates():
-
     try:
         installedVersion = pkg_resources.get_distribution(python_package).version
-        handleProxy()
-        req = requests.get(hazpy_version_url, timeout=http_timeout)
+        try:
+            handleProxy()
+            req = requests.get(hazpy_version_url, timeout=http_timeout)
+        except:
+            removeProxy()
+            req = requests.get(hazpy_version_url, timeout=http_timeout)
         status = req.status_code
 
         if status == 200:
@@ -150,9 +154,12 @@ def checkForToolUpdates():
             text = init.readlines()
             textBlob = ''.join(text)
             installedVersion = parseVersionFromInit(textBlob)
-
-        handleProxy()
-        req = requests.get(tool_version_url, timeout=http_timeout)
+        try:
+            handleProxy()
+            req = requests.get(tool_version_url, timeout=http_timeout)
+        except:
+            removeProxy()
+            req = requests.get(tool_version_url, timeout=http_timeout)
         status = req.status_code
 
         if status == 200:
@@ -236,3 +243,7 @@ def handleProxy():
         # 0 indicates there is no internet connection
         # or the method was unable to connect using the hosts and ports
         return -1
+
+def removeProxy():
+    os.environ['HTTP_PROXY'] = ''
+    os.environ['HTTPS_PROXY'] = ''
