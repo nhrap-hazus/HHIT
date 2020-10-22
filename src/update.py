@@ -11,9 +11,9 @@
   
 try:
     try:
-        from src.manage import internetConnected, checkForHazPyUpdates, checkForToolUpdates
+        from src.manage import checkForHazPyUpdates, checkForToolUpdates
     except:
-        from manage import internetConnected, checkForHazPyUpdates, checkForToolUpdates
+        from manage import checkForHazPyUpdates, checkForToolUpdates
     checkForToolUpdates()        
     checkForHazPyUpdates()
 
