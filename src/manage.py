@@ -187,19 +187,32 @@ def updateTool():
         from zipfile import ZipFile
 
         handleProxy()
+        print("1")
         r = requests.get(tool_zipfile_url)
-
+        print("2")
         z = ZipFile(BytesIO(r.content))
+        print("3")
         z.extractall()
+        print("4")
         fromDirectory = z.namelist()[0]
+        print("5")
         toDirectory = './'
+        print("6")
+        print(fromDirectory)
+        print(toDirectory)
         copy_tree(fromDirectory, toDirectory)
+        print("7")
         rmtree(fromDirectory)
+        print("8")
         messageBox(
             0, u'The tool was successfully updated! I hope that was quick enough for you. The update will take effect when the tool is reopened.', u"HazPy", 0x1000)
     except:
-        messageBox(
-            0, u'The tool update failed. If this error persists, contact hazus-support@riskmapcds.com for assistance.', u"HazPy", 0x1000)
+        messageBox = ctypes.windll.user32.MessageBoxW
+        error = str(sys.exc_info()[0])
+        messageBox(0, u"The tool update failed: {er} | If this problem persists, contact hazus-support@riskmapcds.com.".format(er=error), u"HazPy", 0x1000)
+
+        #messageBox(
+        #    0, u'The tool update failed. If this error persists, contact hazus-support@riskmapcds.com for assistance.', u"HazPy", 0x1000)
 
 
 def parseVersionFromInit(textBlob):
