@@ -14,8 +14,9 @@ try:
         from src.manage import internetConnected, checkForHazPyUpdates, checkForToolUpdates
     except:
         from manage import internetConnected, checkForHazPyUpdates, checkForToolUpdates
+    checkForToolUpdates()        
     checkForHazPyUpdates()
-    checkForToolUpdates()
+
 except:
     import ctypes
     import sys
