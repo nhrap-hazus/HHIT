@@ -164,6 +164,7 @@ def processStormJSON(inputJSON):
                     #polygonPath = './src/assets/spatial/inlandPolygon.shp'
                     polygonPath = './src/assets/spatial/inlandPolygon.json'
                     polygon = geopandas.GeoDataFrame.from_file(polygonPath)
+                    polygon.crs = "epsg:4326" #a warning was generated with sjoin: UserWarning: CRS of frames being joined does not match!(epsg:4326 != {'init': 'epsg:4326'})
                 except Exception as e:
                     logging.warning('polygon issue')
                     logging.warning(polygonPath)
