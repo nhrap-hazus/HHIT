@@ -202,14 +202,14 @@ def updateTool():
         print(toDirectory)
         copy_tree(fromDirectory, toDirectory)
         print("7")
-        rmtree(fromDirectory)
+        rmtree(fromDirectory) #this is failing if the zipfile has any readonly files or folders
         print("8")
         messageBox(
             0, u'The tool was successfully updated! I hope that was quick enough for you. The update will take effect when the tool is reopened.', u"HazPy", 0x1000)
         print('9')
     except:
         #messageBox = ctypes.windll.user32.MessageBoxW #produces this error when updating tool: UnboundLocalError
-        #now getting this error when updating tool distutils.errors.DistutilsFileError
+        #now getting this error when updating tool distutils.errors.DistutilsFileError, see rmtree above
         print('A')
         error = str(sys.exc_info()[0])
         print('B')
