@@ -206,11 +206,15 @@ def updateTool():
         print("8")
         messageBox(
             0, u'The tool was successfully updated! I hope that was quick enough for you. The update will take effect when the tool is reopened.', u"HazPy", 0x1000)
+        print('9')
     except:
-        messageBox = ctypes.windll.user32.MessageBoxW
+        #messageBox = ctypes.windll.user32.MessageBoxW #produces this error when updating tool: UnboundLocalError
+        #now getting this error when updating tool distutils.errors.DistutilsFileError
+        print('A')
         error = str(sys.exc_info()[0])
+        print('B')
         messageBox(0, u"The tool update failed: {er} | If this problem persists, contact hazus-support@riskmapcds.com.".format(er=error), u"HazPy", 0x1000)
-
+        print('C')
         #messageBox(
         #    0, u'The tool update failed. If this error persists, contact hazus-support@riskmapcds.com for assistance.', u"HazPy", 0x1000)
 
