@@ -200,9 +200,15 @@ def updateTool():
         print("6")
         print(fromDirectory)
         print(toDirectory)
-        copy_tree(fromDirectory, toDirectory)
+        try:
+            copy_tree(fromDirectory, toDirectory)
+        except Exception as e:
+            print(e) #could not delete './log\hhit.log': The process cannot access the file because it is being used by another process
         print("7")
-        rmtree(fromDirectory) #this is failing if the zipfile has any readonly files or folders
+        try:
+            rmtree(fromDirectory) #this is failing if the zipfile has any readonly files or folders it seems. 
+        except Exception as e:
+            print(e)
         print("8")
         messageBox(
             0, u'The tool was successfully updated! I hope that was quick enough for you. The update will take effect when the tool is reopened.', u"HazPy", 0x1000)
