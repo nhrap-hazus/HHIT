@@ -1,6 +1,3 @@
-##from subprocess import call
-##call('CALL conda.bat activate hazus_env & start /min python ./src/hurrevac_run.py', shell=True)
- 
 import json
 from subprocess import call
 
