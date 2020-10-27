@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Apr 20 09:36:01 2020
-Requirements: Python 3.7, Anaconda3 64bit
+Requirements: Python 3.7, Anaconda3 64bit, hazus_env
 @author: Colin Lindeman
 """
 
@@ -14,16 +14,16 @@ import math
 from math import radians, cos, sin, asin, sqrt
 import geopandas
 from geopandas.tools import sjoin
-import logging
+##import logging
 
 try:
     with open("hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
-    logging.debug("Opening hurrevac_settings.json")
+##    logging.debug("Opening hurrevac_settings.json")
 except:
     with open("./src/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
-    logging.debug("Opening ./src/hurrevac_settings.json")
+##    logging.debug("Opening ./src/hurrevac_settings.json")
     
 def popupmsg(msg):
     """ Creates a tkinter popup message window
@@ -32,7 +32,7 @@ def popupmsg(msg):
             msg: str -- The message you want to display
     """    
     tk.messagebox.showinfo(message=msg)
-    logging.debug("Running popupmsg")
+##    logging.debug("Running popupmsg")
 
 def processStormJSON(inputJSON):
     """ Transforms Hurrevac storm json into Hazus-schema compatible pandas dataframes
@@ -48,7 +48,7 @@ def processStormJSON(inputJSON):
         Note: That the return items huScenario and huStormTrack correspond to the Hazus
         tables of the same name in syHazus.
     """ 
-    logging.debug("Running processStormJSON")
+##    logging.debug("Running processStormJSON")
     try:
         def distance(lat1, lat2, lon1, lon2): 
             # The math module contains a function named 
@@ -144,8 +144,9 @@ def processStormJSON(inputJSON):
             df['TimeStep'] = df['TimeStep'] / np.timedelta64(1,'h')
             df['TimeStep'] = df['TimeStep'].apply(np.int64)
         except Exception as e:
-            logging.warning('TimeStep')
-            logging.warning(e)
+            print(e)
+##            logging.warning('TimeStep')
+##            logging.warning(e)
         
         '''Latitude'''
         df.rename(columns = {'centerLatitude':'Latitude'}, inplace=True)
@@ -166,16 +167,18 @@ def processStormJSON(inputJSON):
                     polygon = geopandas.GeoDataFrame.from_file(polygonPath)
                     polygon.crs = "epsg:4326" #a warning was generated with sjoin: UserWarning: CRS of frames being joined does not match!(epsg:4326 != {'init': 'epsg:4326'})
                 except Exception as e:
-                    logging.warning('polygon issue')
-                    logging.warning(polygonPath)
-                    logging.warning(e)
+                    print(e)
+##                    logging.warning('polygon issue')
+##                    logging.warning(polygonPath)
+##                    logging.warning(e)
                 pointInPolys = sjoin(point, polygon, how='left')
                 inlandPoints = pointInPolys[pointInPolys.index_right.notnull()].copy()
                 inlandPointsDF = pd.DataFrame(inlandPoints.drop(columns='geometry'))
                 TimeStepList = inlandPointsDF['TimeStep'].to_list()
             except Exception as e:
-                logging.warning('inlandlist issue')
-                logging.warning(e)
+                print(e)
+##                logging.warning('inlandlist issue')
+##                logging.warning(e)
             return TimeStepList
         
         def InlandUpdate(row, inlandList):
@@ -185,19 +188,22 @@ def processStormJSON(inputJSON):
                 else:
                     return 0
             except Exception as e:
-                logging.warning('inlandupdate issue')
-                logging.warning(e)
+                print(e)
+##                logging.warning('inlandupdate issue')
+##                logging.warning(e)
                 
         try:
             inlandList = createInlandList(df)
         except Exception as e:
-            logging.warning('binlandlist issue')
-            logging.warning(e)        
+            print(e)
+##            logging.warning('binlandlist issue')
+##            logging.warning(e)        
         try:
             df['bInland'] = df.apply(lambda row: InlandUpdate(row, inlandList), axis=1)
         except Exception as e:
-            logging.warning('binland issue')
-            logging.warning(e)
+            print(e)
+##            logging.warning('binland issue')
+##            logging.warning(e)
         #see also forecast section
         
         '''TranslationSpeed'''
@@ -222,8 +228,9 @@ def processStormJSON(inputJSON):
         try:
             df['MaxWindSpeed'] = df.apply(lambda row: MaxWindSpeedCalc(row), axis=1)
         except Exception as e:
-            logging.warning('MaxWindSpeed issue')
-            logging.warning(e)
+            print(e)
+##            logging.warning('MaxWindSpeed issue')
+##            logging.warning(e)
             
         '''RadiusToHurrWindsType''' 
         def radiusToHurrWindsTypeCalc(row):
@@ -240,8 +247,9 @@ def processStormJSON(inputJSON):
         try:
             df['RadiusToHurrWindsType'] = df.apply(lambda row: radiusToHurrWindsTypeCalc(row), axis=1)
         except Exception as e:
-            logging.warning('RadiusToHurrWindsType issue')
-            logging.warning(e)
+            print(e)
+##            logging.warning('RadiusToHurrWindsType issue')
+##            logging.warning(e)
         
         '''Central Presssure'''
         df.rename(columns = {'minimumPressure':'CentralPressure'}, inplace=True)
@@ -278,8 +286,9 @@ def processStormJSON(inputJSON):
             df['RadiusTo50KWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 50, HurrevacRHurr50Factor), axis=1)
             df['RadiusToHurrWinds'] = df.apply(lambda row: AdvisoryPointRadiusToXWinds(row, 64, HurrevacRHurr64Factor), axis=1)
         except Exception as e:
-            logging.warning('RadiusToXWinds')
-            logging.warning(e)
+            print(e)
+##            logging.warning('RadiusToXWinds')
+##            logging.warning(e)
 
         '''FILL IN INTERIM FIELDS WHERE NEEDED'''
         '''Only for interim (i.e. 4A), Where there is a 0 or null, use previous.'''
@@ -322,8 +331,9 @@ def processStormJSON(inputJSON):
                         '''number is numeric and not an interim advisory'''
                         pass
             except Exception as e:
-                logging.warning('Interim futureForecasts issue')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Interim futureForecasts issue')
+##                logging.warning(e)
                     
     
         '''Zero out wind radii based on HurrWindsType...'''
@@ -342,8 +352,9 @@ def processStormJSON(inputJSON):
                 else:
                     pass
         except Exception as e:
-            logging.warning('Wind Radii Cleanup')
-            logging.warning(e)
+            print(e)
+##            logging.warning('Wind Radii Cleanup')
+##            logging.warning(e)
     
         '''NewCentralPressure'''
         #pass
@@ -373,17 +384,18 @@ def processStormJSON(inputJSON):
             for i in df.index:
                 if i == 0:
                     '''First row won't have a previous'''
-                    logging.debug(f"{i} first row TimeStep: {df.loc[i, 'TimeStep']}")
+##                    logging.debug(f"{i} first row TimeStep: {df.loc[i, 'TimeStep']}")
                     pass
                 elif df.loc[i, 'bInland'] == 1 and df.loc[i-1, 'bInland'] == 1 and df.loc[i, 'MaxWindSpeed'] > df.loc[i-1, 'MaxWindSpeed']:
-                    logging.debug(f"{i} inland and currrent maxwindspeed is greater than previous bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+##                    logging.debug(f"{i} inland and currrent maxwindspeed is greater than previous bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
                     df.loc[i, 'MaxWindSpeed'] = df.loc[i-1, 'MaxWindSpeed']
                 else:
-                    logging.debug(f"{i} else: bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+##                    logging.debug(f"{i} else: bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
                     pass
         except Exception as e:
-            logging.warning('bInland no increase in maxwindspeed over land issue')
-            logging.warning(e)
+            print(e)
+##            logging.warning('bInland no increase in maxwindspeed over land issue')
+##            logging.warning(e)
         
         '''bInland MaxWindSpeed Adjustment'''
         '''the 15% increase for inland provides a way to represent what the intensity could be if the inland points were overwater'''
@@ -409,8 +421,9 @@ def processStormJSON(inputJSON):
                     pass
                 previousInland = currentInland
         except Exception as e:
-            logging.warning('bInland MaxWindSpeed issue')
-            logging.warning(e)
+            print(e)
+##            logging.warning('bInland MaxWindSpeed issue')
+##            logging.warning(e)
 
 
 
@@ -446,8 +459,9 @@ def processStormJSON(inputJSON):
                 dfForecasts['TimeStep'] = dfForecasts['TimeStep'] / np.timedelta64(1,'h')
                 dfForecasts['TimeStep'] = dfForecasts['TimeStep'].apply(np.int64)
             except Exception as e:
-                logging.warning('Forecast TimeStep')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast TimeStep')
+##                logging.warning(e)
             dfForecasts.drop(columns=['startDateTime'], inplace=True)
         
             # '''bInland Status method'''
@@ -477,13 +491,15 @@ def processStormJSON(inputJSON):
             try:
                 forecastInlandList = createInlandList(dfForecasts)
             except Exception as e:
-                logging.warning('Forecast binlandlist issue')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast binlandlist issue')
+##                logging.warning(e)
             try:
                 dfForecasts['bInland'] = dfForecasts.apply(lambda row: InlandUpdate(row, forecastInlandList), axis=1)
             except Exception as e:
-                logging.warning('Forecast binland issue')
-                logging.warning(e)        
+                print(e)
+##                logging.warning('Forecast binland issue')
+##                logging.warning(e)        
         
             '''Forecast MaxWindSpeed'''
             def MaxWindSpeedForecastCalc(row):
@@ -494,15 +510,17 @@ def processStormJSON(inputJSON):
             try:
                 dfForecasts['MaxWindSpeed'] = dfForecasts.apply(lambda row: MaxWindSpeedForecastCalc(row), axis=1)
             except Exception as e:
-                logging.warning('Forecast MaxWindSpeed')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast MaxWindSpeed')
+##                logging.warning(e)
         
             '''Forecast RadiusToHurrWindsType'''
             try:
                 dfForecasts['RadiusToHurrWindsType'] = dfForecasts.apply(lambda row: radiusToHurrWindsTypeCalc(row), axis=1)
             except Exception as e:
-                logging.warning('Forecast radiustohurrwindstype')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast radiustohurrwindstype')
+##                logging.warning(e)
         
             '''Forecast RadiusToXWinds'''
             dfForecasts['RadiusTo34KWinds'] = dfForecasts.apply(lambda row: RadiusToXWinds(row, 34, HurrevacRHurr34Factor), axis=1)
@@ -526,8 +544,9 @@ def processStormJSON(inputJSON):
                     else:
                         pass
             except Exception as e:
-                logging.warning('Forecast Wind Radii Cleanup')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast Wind Radii Cleanup')
+##                logging.warning(e)
         
             '''Forecast Translation Speed'''
             dfForecasts['TranslationSpeed'] = 0
@@ -576,8 +595,9 @@ def processStormJSON(inputJSON):
                     latA = latB
                     longA = longB
             except Exception as e:
-                logging.warning('Forecast Direction:')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast Direction:')
+##                logging.warning(e)
             
             '''Forecast CentralPressure'''
             pressureBar = 1013.0
@@ -599,25 +619,27 @@ def processStormJSON(inputJSON):
                         cpA = cpB
                         mwsA = mwsB
             except Exception as e:
-                logging.warning('Forecast centralPressure:')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast centralPressure:')
+##                logging.warning(e)
                 
             '''Forecast bInland points cannot have maxwindspeed increase'''
             try:
                 for i in dfForecasts.index:
                     if i == 0:
                         '''First row won't have a previous'''
-                        logging.debug(f'{i} first row')
+##                        logging.debug(f'{i} first row')
                         pass
                     elif dfForecasts.loc[i, 'bInland'] == 1 and dfForecasts.loc[i-1, 'bInland'] == 1 and dfForecasts.loc[i, 'MaxWindSpeed'] > dfForecasts.loc[i-1, 'MaxWindSpeed']:
-                        logging.debug(f"{i} inland and currrent maxwindspeed is greater than previous bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+##                        logging.debug(f"{i} inland and currrent maxwindspeed is greater than previous bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
                         dfForecasts.loc[i, 'MaxWindSpeed'] = dfForecasts.loc[i-1, 'MaxWindSpeed']
                     else:
-                        logging.debug(f"{i} else: bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
+##                        logging.debug(f"{i} else: bInland: {df.loc[i, 'bInland']} MWS: {df.loc[i, 'MaxWindSpeed']} pMWS: {df.loc[i-1, 'MaxWindSpeed']} TimeStep: {df.loc[i, 'TimeStep']}")
                         pass
             except Exception as e:
-                logging.warning('Forecast bInland no increase in maxwindspeed over land issue')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast bInland no increase in maxwindspeed over land issue')
+##                logging.warning(e)
                 
             '''Forecast bInland MaxWindSpeed Adjustment'''
             try:
@@ -641,8 +663,9 @@ def processStormJSON(inputJSON):
                         pass
                     previousInland = currentInland
             except Exception as e:
-                logging.warning('Forecast bInland MaxWindSpeed issue')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Forecast bInland MaxWindSpeed issue')
+##                logging.warning(e)
                 
             
             
@@ -692,8 +715,9 @@ def processStormJSON(inputJSON):
             try:
                 df['MaxWindSpeed'] = df.apply(lambda row: ThresholdMaxWindSpeed(row), axis=1)
             except Exception as e:
-                logging.warning('Threhold Check MaxWindSpeed')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Threhold Check MaxWindSpeed')
+##                logging.warning(e)
 
             '''RadiusTo34KWinds'''
             def ThresholdRadiusTo34KWinds(row):
@@ -704,8 +728,9 @@ def processStormJSON(inputJSON):
             try:
                 df['RadiusTo34KWinds'] = df.apply(lambda row: ThresholdRadiusTo34KWinds(row), axis=1)
             except Exception as e:
-                logging.warning('Threhold Check RadiusTo34KWinds')
-                logging.warning(e)
+                print(e)
+##                logging.warning('Threhold Check RadiusTo34KWinds')
+##                logging.warning(e)
         
 
 
@@ -759,13 +784,15 @@ def processStormJSON(inputJSON):
                 endNumber = len(df) + 1
                 df.insert(0, 'huStormTrackPtID', range(startNumber, endNumber))
             except Exception as e:
-                logging.warning('optimizeTrack', e)
+                print(e)
+##                logging.warning('optimizeTrack', e)
         
         if OptimizeStormTrack == 1:
             try:
                 optimizeTrack(df_huStormTrack)
             except Exception as e:
-                logging.warning('Optimize Track', e)
+                print(e)
+##                logging.warning('Optimize Track', e)
             
             
         '''CREATE huScenario TABLE...'''
@@ -787,13 +814,14 @@ def processStormJSON(inputJSON):
         huScenarioName = df_huScenario['huScenarioName'].unique().tolist()[0]
         huStormTrack = df_huStormTrack
         huScenario = df_huScenario
-        logging.debug(f"Processed: {huScenarioName}")
+##        logging.debug(f"Processed: {huScenarioName}")
         return huScenarioName, huScenario, huStormTrack
     
     except Exception as e:
         popupmsg('Error processing Storm JSON.')
-        logging.warning("storm exception")
-        logging.warning(e)
+        print(e)
+##        logging.warning("storm exception")
+##        logging.warning(e)
         
     
             
