@@ -10,7 +10,7 @@ import tkinter.ttk as ttk
 import urllib.request
 import json
 import hurrevac_storm
-import logging
+##import logging
 
 try:
     with open("hurrevac_settings.json") as f:
@@ -26,7 +26,7 @@ def popupmsg(msg):
             msg: str -- The message you want to display
     """    
     tk.messagebox.showinfo(message=msg)
-    logging.debug("Running popupmsg")
+##    logging.debug("Running popupmsg")
 
 def get_key(val, my_dict):
     """ Check if a given value exists in a dictionary and
@@ -55,7 +55,7 @@ class StormsInfo:
     def GetStormsJSON(self):
         """ Populates JSON variable with json storms data from Hurrevac url
         """
-        logging.debug("Running GetStormsJSON")
+##        logging.debug("Running GetStormsJSON")
         openUrl = urllib.request.urlopen(hurrevacSettings['HurrevacStormsURL'])
         
         if(openUrl.getcode()==200):
@@ -63,12 +63,13 @@ class StormsInfo:
             stormsJSON = json.loads(stormsdata)
             self.JSON = stormsJSON
         else:
-            logging.error("Error receiving data", openUrl.getcode())
+            print("Error receiving data", openUrl.getcode())
+##            logging.error("Error receiving data", openUrl.getcode())
             
     def GetStormsTypes(self):
         """ Populates the storm types dropdown
         """
-        logging.debug("Running GetStormsTypes")
+##        logging.debug("Running GetStormsTypes")
         #working with json
         StormTypes = hurrevacSettings['ShowStormTypes']
         StormTypesList = []
@@ -81,7 +82,7 @@ class StormsInfo:
     def GetStormsBasins(self):
         """ Populates the storm basins dropdown
         """
-        logging.debug("Running GetStormsBasins")
+##        logging.debug("Running GetStormsBasins")
         #working with json
         StormBasins = hurrevacSettings['BasinsDictionary']
         StormBasinsLabels = list(StormBasins.values())
@@ -90,7 +91,7 @@ class StormsInfo:
     def GetStormsYears(self):
         """ Populates the storm years dropdown
         """
-        logging.debug("Running GetStormsYears")
+##        logging.debug("Running GetStormsYears")
         #working with json
         yearList = []
         for i in self.JSON:
@@ -122,7 +123,7 @@ class StormsInfo:
         basin, type and status.
         """
         
-        logging.debug("Running GetStormNames")
+##        logging.debug("Running GetStormNames")
         '''Get basins code from label in settings.json'''
         '''It would be nice to sort storms by alphabet then greek alphabet 
            when there are more than 26 storms'''
@@ -183,7 +184,7 @@ class StormInfo:
         Keyword Arguments:
            StormId :string -- Hurrevac stormid
         """
-        logging.debug("Running GetStormJSON")
+##        logging.debug("Running GetStormJSON")
         self.Id = StormId
         #from internet
         #attribute and used as input to GetStormDataframe
@@ -195,12 +196,13 @@ class StormInfo:
             stormJSON = json.loads(stormdata)
             if len(stormJSON) == 0:
                 popupmsg("StormID not found.")
-                logging.warning("stormJSON length is 0, possible incorrect stormid")
+##                logging.warning("stormJSON length is 0, possible incorrect stormid")
             else:
                 self.JSON = stormJSON
         else:
             popupmsg("Error receiving data. Check settings.json url or site is down or changed.")
-            logging.error("Error receiving data: %s" % openUrl.getcode())
+            print("Error receiving data: %s" % openUrl.getcode())
+##            logging.error("Error receiving data: %s" % openUrl.getcode())
 
     def GetStormDataframe(self, stormJSON):
         """ Convert Hurrevac JSON of user's selected stormid into pandas dataframes using
@@ -209,7 +211,7 @@ class StormInfo:
         Keyword Arguments:
            stormJSON : json
         """
-        logging.debug("Running GetStormDataframe")
+##        logging.debug("Running GetStormDataframe")
         #from other python script
         #attribute and used as input to ExportToJSON
         stormDataframes = hurrevac_storm.processStormJSON(stormJSON)
