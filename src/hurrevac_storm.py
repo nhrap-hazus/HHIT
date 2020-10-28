@@ -719,10 +719,12 @@ def processStormJSON(inputJSON):
 ##                logging.warning('Threhold Check MaxWindSpeed')
 ##                logging.warning(e)
 
-            '''RadiusTo34KWinds'''
+            '''RadiusTo34KWinds Min and Max Thresholds'''
             def ThresholdRadiusTo34KWinds(row):
                 if row['RadiusToHurrWindsType'] == 'T' and row['RadiusTo34KWinds'] == 0:
                     return 30
+                elif row['RadiusToHurrWindsType'] == 'T' and row['RadiusTo34KWinds'] > 199:
+                    return 199
                 else:
                     return row['RadiusTo34KWinds']
             try:
@@ -730,6 +732,36 @@ def processStormJSON(inputJSON):
             except Exception as e:
                 print(e)
 ##                logging.warning('Threhold Check RadiusTo34KWinds')
+##                logging.warning(e)
+
+            '''RadiusTo50KWinds Min and Max Thresholds'''
+            def ThresholdRadiusTo50KWinds(row):
+                if row['RadiusToHurrWindsType'] == '5' and row['RadiusTo50KWinds'] < 1:
+                    return 1
+                elif row['RadiusToHurrWindsType'] == '5' and row['RadiusTo50KWinds'] > 199:
+                    return 199
+                else:
+                    return row['RadiusTo50KWinds']
+            try:
+                df['RadiusTo50KWinds'] = df.apply(lambda row: ThresholdRadiusTo50KWinds(row), axis=1)
+            except Exception as e:
+                print(e)
+##                logging.warning('Threhold Check RadiusTo50KWinds')
+##                logging.warning(e)
+
+            '''RadiusToHurrWinds Min and Max Thresholds'''
+            def ThresholdRadiusToHurrWinds(row):
+                if row['RadiusToHurrWindsType'] == 'H' and row['RadiusToHurrWinds'] < 1:
+                    return 1
+                elif row['RadiusToHurrWindsType'] == 'H' and row['RadiusToHurrWinds'] > 199:
+                    return 199
+                else:
+                    return row['RadiusToHurrWinds']
+            try:
+                df['RadiusToHurrWinds'] = df.apply(lambda row: ThresholdRadiusToHurrWinds(row), axis=1)
+            except Exception as e:
+                print(e)
+##                logging.warning('Threhold Check RadiusToHurrWinds')
 ##                logging.warning(e)
         
 
