@@ -16,7 +16,7 @@ try:
     with open("hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
 except:
-    with open("./src/hurrevac_settings.json") as f:
+    with open("./Python_env/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
     
 def popupmsg(msg):
