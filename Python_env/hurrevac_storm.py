@@ -21,9 +21,9 @@ try:
         hurrevacSettings = json.load(f)
 ##    logging.debug("Opening hurrevac_settings.json")
 except:
-    with open("./src/hurrevac_settings.json") as f:
+    with open("./Python_env/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
-##    logging.debug("Opening ./src/hurrevac_settings.json")
+##    logging.debug("Opening ./Python_env/hurrevac_settings.json")
     
 def popupmsg(msg):
     """ Creates a tkinter popup message window
@@ -162,8 +162,8 @@ def processStormJSON(inputJSON):
                 point = geopandas.GeoDataFrame(inputDF, geometry=geopandas.points_from_xy(inputDF.Longitude, inputDF.Latitude)).copy()
                 point.crs = "epsg:4326"
                 try:
-                    #polygonPath = './src/assets/spatial/inlandPolygon.shp'
-                    polygonPath = './src/assets/spatial/inlandPolygon.json'
+                    #polygonPath = './Python_env/assets/spatial/inlandPolygon.shp'
+                    polygonPath = './Python_env/assets/spatial/inlandPolygon.json'
                     polygon = geopandas.GeoDataFrame.from_file(polygonPath)
                     polygon.crs = "epsg:4326" #a warning was generated with sjoin: UserWarning: CRS of frames being joined does not match!(epsg:4326 != {'init': 'epsg:4326'})
                 except Exception as e:

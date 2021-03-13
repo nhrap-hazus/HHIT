@@ -17,7 +17,7 @@ from hazpy.legacy import common as hazpy_common
 
 ##'''Setup Logging'''
 ##logger = logging.getLogger()
-##configLoggerFile = "./src/config_logging.json" #set in reference for hazus-hurrevac-import-tool.py
+##configLoggerFile = "./Python_env/config_logging.json" #set in reference for hazus-hurrevac-import-tool.py
 ##with open(configLoggerFile, "r", encoding="utf-8") as fd:
 ##    loggerConfig = json.load(fd)
 ##logging.config.dictConfig(loggerConfig["logging"])
@@ -27,7 +27,7 @@ try:
     with open("hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
 except:
-    with open("./src/hurrevac_settings.json") as f:
+    with open("./Python_env/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
 
 def popupmsg(msg):
@@ -68,7 +68,7 @@ def popupmsgNextSteps(msg):
     try:
         #global img_NextSteps
         try:
-            img_NextSteps = tk.PhotoImage(file="./src/assets/images/NextSteps.png")
+            img_NextSteps = tk.PhotoImage(file="./Python_env/assets/images/NextSteps.png")
         except:
             img_NextSteps = tk.PhotoImage(file="./assets/images/NextSteps.png")
         imageLabel = tk.Label(popup, image=img_NextSteps)
