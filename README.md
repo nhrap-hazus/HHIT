@@ -64,4 +64,4 @@ Hurricane Dorian (2019) optimized storm track; data points in orange portion of 
 
 Issues can be reported through the repository on Github (https://github.com/nhrap-dev/Hurrevac)
 
-For questions contact hazus-support@riskmapcds.com
+For questions contact fema-hazus-support@fema.dhs.gov
