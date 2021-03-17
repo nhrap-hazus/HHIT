@@ -10,13 +10,13 @@ import tkinter.ttk as ttk
 import urllib.request
 import json
 import hurrevac_storm
-import logging
+##import logging
 
 try:
     with open("hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
 except:
-    with open("./src/hurrevac_settings.json") as f:
+    with open("./Python_env/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
     
 def popupmsg(msg):
@@ -26,7 +26,7 @@ def popupmsg(msg):
             msg: str -- The message you want to display
     """    
     tk.messagebox.showinfo(message=msg)
-    logging.debug("Running popupmsg")
+##    logging.debug("Running popupmsg")
 
 def get_key(val, my_dict):
     """ Check if a given value exists in a dictionary and
@@ -55,7 +55,7 @@ class StormsInfo:
     def GetStormsJSON(self):
         """ Populates JSON variable with json storms data from Hurrevac url
         """
-        logging.debug("Running GetStormsJSON")
+##        logging.debug("Running GetStormsJSON")
         openUrl = urllib.request.urlopen(hurrevacSettings['HurrevacStormsURL'])
         
         if(openUrl.getcode()==200):
@@ -63,12 +63,13 @@ class StormsInfo:
             stormsJSON = json.loads(stormsdata)
             self.JSON = stormsJSON
         else:
-            logging.error("Error receiving data", openUrl.getcode())
+            print("Error receiving data", openUrl.getcode())
+##            logging.error("Error receiving data", openUrl.getcode())
             
     def GetStormsTypes(self):
         """ Populates the storm types dropdown
         """
-        logging.debug("Running GetStormsTypes")
+##        logging.debug("Running GetStormsTypes")
         #working with json
         StormTypes = hurrevacSettings['ShowStormTypes']
         StormTypesList = []
@@ -81,7 +82,7 @@ class StormsInfo:
     def GetStormsBasins(self):
         """ Populates the storm basins dropdown
         """
-        logging.debug("Running GetStormsBasins")
+##        logging.debug("Running GetStormsBasins")
         #working with json
         StormBasins = hurrevacSettings['BasinsDictionary']
         StormBasinsLabels = list(StormBasins.values())
@@ -90,7 +91,7 @@ class StormsInfo:
     def GetStormsYears(self):
         """ Populates the storm years dropdown
         """
-        logging.debug("Running GetStormsYears")
+##        logging.debug("Running GetStormsYears")
         #working with json
         yearList = []
         for i in self.JSON:
@@ -122,18 +123,23 @@ class StormsInfo:
         basin, type and status.
         """
         
-        logging.debug("Running GetStormNames")
+##        logging.debug("Running GetStormNames")
         '''Get basins code from label in settings.json'''
-        '''It would be nice to sort storms by alphabet then greek alphabet 
-           when there are more than 26 storms'''
         StormBasins = hurrevacSettings['BasinsDictionary']
         basinCode = get_key(basinLabel, StormBasins)
-        #working with json
+        #Note: working with json
         stormNameStatusIDList = []
-        activeStorms = []
-        historicStorms = []
-        exerciseStorms = []
-        simulatedStorms = []
+        
+        activeStormsDictList = []
+        historicStormsDictList = []
+        exerciseStormsDictList = []
+        simulatedStormsDictList = []
+        
+        activeStormsLabelsList = []
+        historicStormsLabelsList = []
+        exerciseStormsLabelsList = []
+        simulatedStormsLabelsList = []
+        
         '''Iterate over storms for a given year, append to each list'''
         try:
             year = str(year)
@@ -144,32 +150,64 @@ class StormsInfo:
             stormId = str(storm['stormId'])
             stormStatus = str(storm['status'])
             stormBasin = str(storm['basin'])
-            stormLabel = stormName + " (" + stormStatus + ") " + " [" + stormId + "]"
+            stormDict = {"Name":stormName,"Status":stormStatus,"StormId":stormId}
             if stormBasin == basinCode:
                 if stormStatus == "Simulated":
-                    simulatedStorms.append(stormLabel)
+                    simulatedStormsDictList.append(stormDict)
                 elif stormStatus == "Historical":
-                    historicStorms.append(stormLabel)
+                    historicStormsDictList.append(stormDict)
                 elif stormStatus == "Exercise":
-                    exerciseStorms.append(stormLabel)
+                    exerciseStormsDictList.append(stormDict)
                 elif stormStatus == "Active":
-                    activeStorms.append(stormLabel)
-        activeStorms.sort()
-        historicStorms.sort()
-        exerciseStorms.sort()
-        simulatedStorms.sort()
+                    activeStormsDictList.append(stormDict)
+                    
+        '''Sort the lists alphabetically by stormid:essentially by number i.e. ['al012020', 'al022020']'''
+        def stormDictSortFunc(e):
+            '''use to sort a list of dictionaries by a dictionaries key's value'''
+            return e['StormId']
+        activeStormsDictList.sort(key=stormDictSortFunc)
+        historicStormsDictList.sort(key=stormDictSortFunc)
+        exerciseStormsDictList.sort(key=stormDictSortFunc)
+        simulatedStormsDictList.sort(key=stormDictSortFunc)
+
+        '''Create the stormlabels to be shown in the gui'''
+        for storm in activeStormsDictList:
+            stormName = str(storm['Name'])
+            stormStatus = str(storm['Status'])
+            stormId = str(storm['StormId'])
+            stormLabel = stormName + " (" + stormStatus + ") " + " [" + stormId + "]"
+            activeStormsLabelsList.append(stormLabel)
+        for storm in historicStormsDictList:
+            stormName = str(storm['Name'])
+            stormStatus = str(storm['Status'])
+            stormId = str(storm['StormId'])
+            stormLabel = stormName + " (" + stormStatus + ") " + " [" + stormId + "]"
+            historicStormsLabelsList.append(stormLabel)
+        for storm in exerciseStormsDictList:
+            stormName = str(storm['Name'])
+            stormStatus = str(storm['Status'])
+            stormId = str(storm['StormId'])
+            stormLabel = stormName + " (" + stormStatus + ") " + " [" + stormId + "]"
+            exerciseStormsLabelsList.append(stormLabel)
+        for storm in simulatedStormsDictList:
+            stormName = str(storm['Name'])
+            stormStatus = str(storm['Status'])
+            stormId = str(storm['StormId'])
+            stormLabel = stormName + " (" + stormStatus + ") " + " [" + stormId + "]"
+            simulatedStormsLabelsList.append(stormLabel)
+        
         '''Determine which type of storms are added to the main list'''
         if 'Active' in stormTypes:
-            for i in activeStorms:
+            for i in activeStormsLabelsList:
                 stormNameStatusIDList.append(i)
         if 'Historical' in stormTypes:
-            for i in historicStorms:
+            for i in historicStormsLabelsList:
                 stormNameStatusIDList.append(i)
         if 'Exercise' in stormTypes:
-            for i in exerciseStorms:
+            for i in exerciseStormsLabelsList:
                 stormNameStatusIDList.append(i)
         if 'Simulated' in stormTypes:
-            for i in simulatedStorms:
+            for i in simulatedStormsLabelsList:
                 stormNameStatusIDList.append(i)
         if len(stormNameStatusIDList) > 0:
             return tuple(stormNameStatusIDList)
@@ -183,7 +221,7 @@ class StormInfo:
         Keyword Arguments:
            StormId :string -- Hurrevac stormid
         """
-        logging.debug("Running GetStormJSON")
+##        logging.debug("Running GetStormJSON")
         self.Id = StormId
         #from internet
         #attribute and used as input to GetStormDataframe
@@ -195,12 +233,13 @@ class StormInfo:
             stormJSON = json.loads(stormdata)
             if len(stormJSON) == 0:
                 popupmsg("StormID not found.")
-                logging.warning("stormJSON length is 0, possible incorrect stormid")
+##                logging.warning("stormJSON length is 0, possible incorrect stormid")
             else:
                 self.JSON = stormJSON
         else:
             popupmsg("Error receiving data. Check settings.json url or site is down or changed.")
-            logging.error("Error receiving data: %s" % openUrl.getcode())
+            print("Error receiving data: %s" % openUrl.getcode())
+##            logging.error("Error receiving data: %s" % openUrl.getcode())
 
     def GetStormDataframe(self, stormJSON):
         """ Convert Hurrevac JSON of user's selected stormid into pandas dataframes using
@@ -209,7 +248,7 @@ class StormInfo:
         Keyword Arguments:
            stormJSON : json
         """
-        logging.debug("Running GetStormDataframe")
+##        logging.debug("Running GetStormDataframe")
         #from other python script
         #attribute and used as input to ExportToJSON
         stormDataframes = hurrevac_storm.processStormJSON(stormJSON)
