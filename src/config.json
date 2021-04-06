@@ -1,55 +1,60 @@
 {
-  "activeThemeId": 0,
+  "activeTheme": "light",
   "themes": {
     "light": {
-      "themeId": 0,
-      "style": {
-        "backgroundColor": "#fff",
-        "foregroundColor": "#000",
-        "hoverColor": "#f8f8f8",
-        "fontColor": "#303030",
-        "textEntryColor": "#fff",
-        "textBorderColor": "#808080",
-        "textHighlightColor": "#1a73ea",
-        "starColor": "red"
-      }
+      "backgroundColor": "#fff",
+      "foregroundColor": "#000",
+      "hoverColor": "#f8f8f8",
+      "fontColor": "#303030",
+      "textEntryColor": "#fff",
+      "textBorderColor": "#808080",
+      "textHighlightColor": "#1a73ea",
+      "starColor": "red"
     },
     "dark": {
-      "themeId": 1,
-      "style": {
-        "backgroundColor": "#282a36",
-        "foregroundColor": "#fff",
-        "hoverColor": "#44475a",
-        "fontColor": "#fff",
-        "textEntryColor": "#fff",
-        "textBorderColor": "#fff",
-        "textHighlightColor": "#fff",
-        "starColor": "red"
-      }
+      "backgroundColor": "#282a36",
+      "foregroundColor": "#fff",
+      "hoverColor": "#44475a",
+      "fontColor": "#fff",
+      "textEntryColor": "#fff",
+      "textBorderColor": "#fff",
+      "textHighlightColor": "#fff",
+      "starColor": "red"
     }
   },
-  "release": "prod",
+  "release": "test",
   "prod": {
-    "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/hazpy/master/hazpy/__init__.py",
-    "repoZipfileUrl": "https://github.com/nhrap-hazus/HHIT/archive/master.zip",
-    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/HHIT/master/src/__init__.py",
+    "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/hazpy/main/hazpy/__init__.py",
+    "repoZipfileUrl": "https://github.com/nhrap-hazus/HHIT/archive/main.zip",
+    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/HHIT/main/src/__init__.py",
     "virtualEnvironment": "hazus_env",
     "condaChannel": "nhrap",
     "pythonPackage": "hazpy",
-    "pythonVersion": "3.7",    
+    "pythonVersion": "3.7",
+    "httpTimeout": 5
+  },
+  "test": {
+    "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/hazpy/test/hazpy/__init__.py",
+    "repoZipfileUrl": "https://github.com/nhrap-hazus/HHIT/archive/test.zip",
+    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/HHIT/test/src/__init__.py",
+    "virtualEnvironment": "hazus_env",
+    "condaChannel": "nhrap",
+    "pythonPackage": "hazpy",
+    "pythonVersion": "3.7",
     "httpTimeout": 5
   },
   "dev": {
-    "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-dev/hazpy/master/hazpy/__init__.py",
-    "repoZipfileUrl": "https://github.com/nhrap-dev/HHIT/archive/master.zip",
-    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-dev/HHIT/master/src/__init__.py",
+    "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-dev/hazpy/dev/hazpy/__init__.py",
+    "repoZipfileUrl": "https://github.com/nhrap-dev/HHIT/archive/dev.zip",
+    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-dev/HHIT/dev/src/__init__.py",
     "virtualEnvironment": "hazus_env",
     "condaChannel": "nhrap-dev",
     "pythonPackage": "hazpy",
-    "pythonVersion": "3.7",    
+    "pythonVersion": "3.7",
     "httpTimeout": 5
   },
   "proxies": {
     "fema": "http://proxy.apps.dhs.gov:80"
-  }
+  },
+  "extras": {}
 }

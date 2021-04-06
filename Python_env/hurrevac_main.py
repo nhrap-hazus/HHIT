@@ -10,26 +10,24 @@ import tkinter.ttk as ttk
 from tkinter import messagebox as messagebox
 import pandas as pd
 import json
-'''standalone method'''
 import os
-#from sqlalchemy import create_engine
 from hazpy.legacy import common as hazpy_common
-import logging
-import logging.config
+##import logging
+##import logging.config
 
-'''Setup Logging'''
-logger = logging.getLogger()
-configLoggerFile = "./src/config_logging.json" #set in reference for hazus-hurrevac-import-tool.py
-with open(configLoggerFile, "r", encoding="utf-8") as fd:
-    loggerConfig = json.load(fd)
-logging.config.dictConfig(loggerConfig["logging"])
-logging.info(' Logging level set to: ?')
+##'''Setup Logging'''
+##logger = logging.getLogger()
+##configLoggerFile = "./Python_env/config_logging.json" #set in reference for hazus-hurrevac-import-tool.py
+##with open(configLoggerFile, "r", encoding="utf-8") as fd:
+##    loggerConfig = json.load(fd)
+##logging.config.dictConfig(loggerConfig["logging"])
+##logging.info(' Logging level set to: ?')
 
 try:
     with open("hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
 except:
-    with open("./src/hurrevac_settings.json") as f:
+    with open("./Python_env/hurrevac_settings.json") as f:
         hurrevacSettings = json.load(f)
 
 def popupmsg(msg):
@@ -39,7 +37,7 @@ def popupmsg(msg):
             msg: str -- The message you want to display
     """    
     tk.messagebox.showinfo(message=msg)
-    logging.debug("Running popupmsg")
+##    logging.debug("Running popupmsg")
 
 def popupmsgNextSteps(msg):
     """ Creates a tkinter popup message window
@@ -50,7 +48,7 @@ def popupmsgNextSteps(msg):
         Note: this one is intended to have the next steps graphic
         and instructions
     """    
-    logging.debug("Running popupmsgNextSteps")
+##    logging.debug("Running popupmsgNextSteps")
     NORM_FONT= ("Tahoma", 12)
     popup = tk.Toplevel()
     popup.grab_set()
@@ -70,7 +68,7 @@ def popupmsgNextSteps(msg):
     try:
         #global img_NextSteps
         try:
-            img_NextSteps = tk.PhotoImage(file="./src/assets/images/NextSteps.png")
+            img_NextSteps = tk.PhotoImage(file="./Python_env/assets/images/NextSteps.png")
         except:
             img_NextSteps = tk.PhotoImage(file="./assets/images/NextSteps.png")
         imageLabel = tk.Label(popup, image=img_NextSteps)
@@ -158,7 +156,7 @@ def CheckScenarioName(huScenarioName):
             boolean
     """     
     '''hazpy method'''
-    logging.debug("Running CheckScenarioName")
+##    logging.debug("Running CheckScenarioName")
     try:       
         z = hazpy_common.HazusDB()
         z.createWriteConnection(databaseName='syHazus')
@@ -166,16 +164,16 @@ def CheckScenarioName(huScenarioName):
         scenariosDF = pd.read_sql_table(table_name="huScenario", con=conn)
         scenariosList = scenariosDF['huScenarioName'].values.tolist()
         if huScenarioName not in scenariosList:
-            logging.debug("ScenarioName does not exist")
+##            logging.debug("ScenarioName does not exist")
             return True
         else:
             popupmsg(f'Scenario "{huScenarioName}" already exists.\nPlease use "Hazus Hurricane Scenario Wizard" to edit or delete.')
-            logging.debug("ScenarioName exists, need to edit the name or delete.")
+##            logging.debug("ScenarioName exists, need to edit the name or delete.")
             return False
     except Exception as e:
         popupmsg(f"Error checking {huScenarioName} in Hazus.")
-        logging.error('CheckscenarioName issue')
-        logging.error(e)
+##        logging.error('CheckscenarioName issue')
+##        logging.error(e)
         
 def ExportToHazus(huScenarioName, huScenario, huStormTrack):
     """ Appends Pandas dataframes to Hazus tables
@@ -186,22 +184,22 @@ def ExportToHazus(huScenarioName, huScenario, huStormTrack):
             huStormTrack: Pandas dataframe
     """     
     '''hazpy method'''
-    logging.debug("Running ExportToHazus")
+##    logging.debug("Running ExportToHazus")
     try:
         z = hazpy_common.HazusDB()
         z.createWriteConnection(databaseName='syHazus')
         conn = z.writeConn
-        logging.debug("Created database connection")
+##        logging.debug("Created database connection")
     except Exception as e:
         popupmsg("Error connecting to Hazus SQL Server.")
-        logging.error("Error connecting to Hazus SQL Server.")
-        logging.error(e)
+##        logging.error("Error connecting to Hazus SQL Server.")
+##        logging.error(e)
     huScenarioDoesntExist = CheckScenarioName(huScenarioName)
     if huScenarioDoesntExist:
         try:
             z.appendData(dataframe=huScenario, tableName='huScenario')
             z.appendData(dataframe=huStormTrack, tableName='huStormTrack')
-            logging.debug(f"Appended {huScenarioName} to Hazus")
+##            logging.debug(f"Appended {huScenarioName} to Hazus")
             popupmsgNextSteps(f'''Scenario "{huScenarioName}" is now available in Hazus.
                   
 Please build or open an existing region and:
@@ -210,8 +208,8 @@ Please build or open an existing region and:
 3. Select Next and proceed through Hazus wizard until new scenario is saved.''')
         except Exception as e:
             popupmsg(f"Error loading {huScenarioName} into Hazus.")
-            logging.error(f"Error loading {huScenarioName} into Hazus.")
-            logging.error(e)
+##            logging.error(f"Error loading {huScenarioName} into Hazus.")
+##            logging.error(e)
 
 # #Test some of the code above...
 if __name__ == "__main__":
