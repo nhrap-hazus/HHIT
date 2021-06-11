@@ -208,7 +208,6 @@ class Manage:
                                          "https://github.com/nhrap-hazus/HHIT/archive/main.zip"]:
                 r = requests.get(self.tool_zipfile_url)
                 z = ZipFile(BytesIO(r.content))
-                #z.extractall()
                 self.safe_unzip(z)
                 fromDirectory = z.namelist()[0]
                 toDirectory = './'
