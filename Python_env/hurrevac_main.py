@@ -79,6 +79,8 @@ def popupmsgNextSteps(msg):
     
     B1 = ttk.Button(popup, text="Okay", command = popup.destroy)
     B1.grid(row=3,column=0,padx=10,pady=20)
+
+    popup.iconbitmap('./Python_env/assets/images/ICO/24px.ico')
     popup.mainloop()
 
 def get_key(val, my_dict):
