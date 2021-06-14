@@ -33,8 +33,8 @@ try:
     '''for windows 10 4k screens'''
     from ctypes import windll
     windll.shcore.SetProcessDpiAwareness(1)
-except:
-    pass
+except ImportError:
+    print('Failed importing ctypes windll for windows 10 4k screens')
 
 print('finished imports')
 
@@ -72,6 +72,7 @@ def popupmsg(msg):
     label.pack(side="top", fill="x", pady=10)
     B1 = ttk.Button(popup, text="Okay", command = popup.destroy)
     B1.pack()
+    popup.iconbitmap('./Python_env/assets/images/ICO/24px.ico')
     popup.mainloop()
 
 def vp_start_gui():
@@ -93,9 +94,8 @@ class Hazus_HurrEvac_HVX_ETL():
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
-        top.title("Hazus Hurrevac Import Tool")
+        top.title("Hazus Hurricane Import Tool")
         top.resizable(0,0)
-        #top.iconbitmap('./assets/images/HazusHIcon.ico') #Enabling iconbitmap opens a small window then the full app with widgets 
         
         def getStormNames(self):
             '''Get type, basin, year then get a tuple of those storms'''
@@ -178,13 +178,18 @@ class Hazus_HurrEvac_HVX_ETL():
         
         #Title
         self.LabelTitle = tk.Label(top, font=("Tahoma", "18"))
-        self.LabelTitle.configure(text='''Hazus Hurrevac Import Tool''')
+        self.LabelTitle.configure(text='''Hazus Hurricane Import Tool''')
         self.LabelTitle.grid(row=0, column=0, padx=10, pady=10)
+
+        #SubTitle
+        self.LabelSubTitle = tk.Label(top, font=("Tahoma", "16"))
+        self.LabelSubTitle.configure(text='''Hurrevac HVX''')
+        self.LabelSubTitle.grid(row=1, column=0, padx=10, pady=10)
         
         #Select a Storm frame
         self.LabelframeSelectStorm = tk.LabelFrame(top, font=("Tahoma", "12"), labelanchor='n', borderwidth=4)
         self.LabelframeSelectStorm.configure(text='''SELECT A STORM''')
-        self.LabelframeSelectStorm.grid(row=1, column=0, padx=20, pady=20)
+        self.LabelframeSelectStorm.grid(row=2, column=0, padx=20, pady=20)
         
         self.LabelframeSelectStormType = tk.LabelFrame(self.LabelframeSelectStorm, font=("Tahoma", "12"), borderwidth=0)
         self.LabelframeSelectStormType.configure(text='''Choose one or more Storm Types to include in the Storms list:''')
@@ -259,12 +264,12 @@ class Hazus_HurrEvac_HVX_ETL():
         #OR label
         self.LabelOR = tk.Label(top, font=("Tahoma", "14", "bold"))
         self.LabelOR.configure(text='''OR''')
-        self.LabelOR.grid(row=2, column=0, padx=20, pady=20, columnspan=2)
+        self.LabelOR.grid(row=3, column=0, padx=20, pady=20, columnspan=2)
         
         #Enter a Storm ID Frame
         self.LabelframeEnterStorm = tk.LabelFrame(top, font=("Tahoma", "12"), labelanchor='n', borderwidth=4)
         self.LabelframeEnterStorm.configure(text='''ENTER A STORM ID''')
-        self.LabelframeEnterStorm.grid(row=3, column=0, padx=20, pady=20)
+        self.LabelframeEnterStorm.grid(row=4, column=0, padx=20, pady=20)
         
         self.LabelEnterStormID = tk.Label(self.LabelframeEnterStorm, font=("Tahoma", "12"))
         self.LabelEnterStormID.configure(text='''If you know the Storm's Hurrevac HVX ID (I.E. "al012020"), enter it here and click "Load to Hazus":''')
@@ -279,7 +284,7 @@ class Hazus_HurrEvac_HVX_ETL():
         
         #Buttons
         self.LabelframeButtons = tk.LabelFrame(top, borderwidth=0)
-        self.LabelframeButtons.grid(row=4, column=0, padx=10, pady=10)
+        self.LabelframeButtons.grid(row=5, column=0, padx=10, pady=10)
         
         self.LoadToHazusButton = tk.Button(self.LabelframeButtons, font=("Tahoma", "12"))
         self.LoadToHazusButton.configure(text='''Load to Hazus''')
@@ -293,6 +298,8 @@ class Hazus_HurrEvac_HVX_ETL():
         
         #center gui on screen after building GUI...
         center(root)
+        
+        top.iconbitmap('./Python_env/assets/images/ICO/24px.ico')
         
 if __name__ == '__main__':
     print('starting gui...')

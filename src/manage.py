@@ -185,8 +185,16 @@ class Manage:
             self.messageBox(0, 'Unable to check for tool updates. If this error persists, contact hazus-support@riskmapcds.com for assistance.', "HazPy", 0x1000 | 0x4)
 
 
-    def updateTool(self):
+    def safe_unzip(self, zf, extract_path='.'):
+        try:
+            for member in zf.infolist():
+                file_path = os.path.realpath(os.path.join(extract_path, member.filename))
+                if file_path.startswith(os.path.realpath(extract_path)):
+                    zf.extract(member, extract_path)
+        except Exception as e:
+            print('Exception safe_unzip:',e)
 
+    def updateTool(self):
         try:
             from distutils.dir_util import copy_tree
             from shutil import rmtree
@@ -194,16 +202,22 @@ class Manage:
             from zipfile import ZipFile
 
             self.handleProxy()
-            r = requests.get(self.tool_zipfile_url)
-
-            z = ZipFile(BytesIO(r.content))
-            z.extractall()
-            fromDirectory = z.namelist()[0]
-            toDirectory = './'
-            copy_tree(fromDirectory, toDirectory)
-            rmtree(fromDirectory)
-            self.messageBox(
-                0, u'The tool was successfully updated! I hope that was quick enough for you. The update will take effect when the tool is reopened.', u"HazPy", 0x1000 | 0x4)
+            
+            if self.tool_zipfile_url in ["https://github.com/nhrap-dev/HHIT/archive/dev.zip",
+                                         "https://github.com/nhrap-hazus/HHIT/archive/test.zip",
+                                         "https://github.com/nhrap-hazus/HHIT/archive/main.zip"]:
+                r = requests.get(self.tool_zipfile_url)
+                z = ZipFile(BytesIO(r.content))
+                self.safe_unzip(z)
+                fromDirectory = z.namelist()[0]
+                toDirectory = './'
+                copy_tree(fromDirectory, toDirectory)
+                rmtree(fromDirectory)
+                self.messageBox(
+                    0, u'The tool was successfully updated! I hope that was quick enough for you. The update will take effect when the tool is reopened.', u"HazPy", 0x1000 | 0x4)
+            else:
+                self.messageBox(
+                    0, u'The tool update failed: bad zipefile config. If this error persists, contact hazus-support@riskmapcds.com for assistance.', u"HazPy", 0x1000 | 0x4)
         except:
             self.messageBox(
                 0, u'The tool update failed. If this error persists, contact hazus-support@riskmapcds.com for assistance.', u"HazPy", 0x1000 | 0x4)
