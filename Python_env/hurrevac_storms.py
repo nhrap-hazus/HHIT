@@ -5,9 +5,12 @@ Requirements: Python 3.7, Anaconda3 64bit
 @author: Colin Lindeman
 """
 
+import os
+from subprocess import call
+import socket
+import requests
 import tkinter as tk
 import tkinter.ttk as ttk
-import urllib.request
 import json
 import hurrevac_storm
 ##import logging
@@ -44,6 +47,40 @@ def get_key(val, my_dict):
              return key 
     return "key doesn't exist"
 
+class Manage:
+    def __init__(self):
+        try:
+            with open('./src/config.json') as configFile:
+                self.config = json.load(configFile)
+        except:
+            with open('../src/config.json') as configFile:
+                self.config = json.load(configFile)
+        # environmental variables
+        self.proxy = self.config['proxies']['fema']
+        self.release = self.config['release']
+        self.http_timeout = self.config[self.release]['httpTimeout']  # in seconds
+    
+    def setProxies(self):
+        """ Temporarily updates the local environmental variables with updated proxies
+        """
+        call('set HTTP_PROXY=' + self.proxy, shell=True)
+        call('set HTTPS_PROXY=' + self.proxy, shell=True)
+        os.environ["HTTP_PROXY"] = self.proxy
+        os.environ["HTTPS_PROXY"] = self.proxy
+
+    def handleProxy(self):
+        try:
+            who_am_i = os.popen('whoami').read().split('\\')[0]
+            if who_am_i.lower() == 'fema':
+                self.setProxies()
+                return True
+            else:
+                return False
+        except:
+            # 0 indicates there is no internet connection
+            # or the method was unable to connect using the hosts and ports
+            return -1
+
 class StormsInfo:
     def __init__(self):
         ''' '''
@@ -56,11 +93,11 @@ class StormsInfo:
         """ Populates JSON variable with json storms data from Hurrevac url
         """
 ##        logging.debug("Running GetStormsJSON")
-        openUrl = urllib.request.urlopen(hurrevacSettings['HurrevacStormsURL'])
-        
-        if(openUrl.getcode()==200):
-            stormsdata = openUrl.read()
-            stormsJSON = json.loads(stormsdata)
+        manage = Manage()
+        manage.handleProxy()
+        openUrl = requests.get(hurrevacSettings['HurrevacStormsURL'])
+        if(openUrl.status_code == 200):
+            stormsJSON = openUrl.json()
             self.JSON = stormsJSON
         else:
             print("Error receiving data", openUrl.getcode())
@@ -226,11 +263,12 @@ class StormInfo:
         #from internet
         #attribute and used as input to GetStormDataframe
         url = hurrevacSettings['HurrevacStormURL'] + "/" + StormId
-        openUrl = urllib.request.urlopen(url)
-        if(openUrl.getcode()==200):
+        manage = Manage()
+        manage.handleProxy()
+        openUrl = requests.get(url)
+        if(openUrl.status_code == 200):
             #Need to check if response is 200 but there is no data "[]", ie a non-valid stormid request.
-            stormdata = openUrl.read()
-            stormJSON = json.loads(stormdata)
+            stormJSON = openUrl.json()
             if len(stormJSON) == 0:
                 popupmsg("StormID not found.")
 ##                logging.warning("stormJSON length is 0, possible incorrect stormid")
