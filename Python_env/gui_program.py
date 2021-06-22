@@ -94,7 +94,7 @@ class Hazus_HurrEvac_HVX_ETL():
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
-        top.title("Hazus Hurricane Import Tool")
+        top.title("Hurricane Hazard Import Tool")
         top.resizable(0,0)
         
         def getStormNames(self):
@@ -178,7 +178,7 @@ class Hazus_HurrEvac_HVX_ETL():
         
         #Title
         self.LabelTitle = tk.Label(top, font=("Tahoma", "18"))
-        self.LabelTitle.configure(text='''Hazus Hurricane Import Tool''')
+        self.LabelTitle.configure(text='''Hurricane Hazard Import Tool''')
         self.LabelTitle.grid(row=0, column=0, padx=10, pady=10)
 
         #SubTitle
