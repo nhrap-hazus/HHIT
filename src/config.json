@@ -30,7 +30,7 @@
     "virtualEnvironment": "hazus_env",
     "condaChannel": "nhrap",
     "pythonPackage": "hazpy",
-    "pythonVersion": "3.7",
+    "pythonVersion": "3.9",
     "httpTimeout": 5
   },
   "test": {
@@ -40,7 +40,7 @@
     "virtualEnvironment": "hazus_env",
     "condaChannel": "nhrap",
     "pythonPackage": "hazpy",
-    "pythonVersion": "3.7",
+    "pythonVersion": "3.9",
     "httpTimeout": 5
   },
   "dev": {
@@ -48,9 +48,9 @@
     "repoZipfileUrl": "https://github.com/nhrap-dev/HHIT/archive/dev.zip",
     "toolInitUrl": "https://raw.githubusercontent.com/nhrap-dev/HHIT/dev/src/__init__.py",
     "virtualEnvironment": "hazus_env",
-    "condaChannel": "nhrap-dev",
+    "condaChannel": "nhrap",
     "pythonPackage": "hazpy",
-    "pythonVersion": "3.7",
+    "pythonVersion": "3.9",
     "httpTimeout": 5
   },
   "proxies": {

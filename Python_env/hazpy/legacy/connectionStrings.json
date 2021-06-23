@@ -1,0 +1,5 @@
+{
+	"pyodbc": "Driver={d};SERVER={cn}\\HAZUSPLUSSRVR;UID=hazuspuser;PWD=Gohazusplus_02",
+	"sqlalchemy": "mssql+pyodbc://hazuspuser:Gohazusplus_02@.\\HAZUSPLUSSRVR/{db}?driver=SQL+Server",
+	"sqlalchemyEditSession": "DRIVER={d};SERVER={cn}\\HAZUSPLUSSRVR;PORT=1433;DATABASE={db};UID=hazuspuser;PWD=Gohazusplus_02;TDS_Version=8.0;"
+}
