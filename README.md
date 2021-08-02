@@ -23,7 +23,9 @@ The HHIT requires Hazus, ArcGIS Desktop, Anaconda, and an active internet connec
 
 **1. Download zip folder of tool from GitHub, unzip**
 
-![Download HHIT](Python_env/assets/images/DownloadHHIT.jpg "Download HHIT") 
+![Download Release HHIT](Python_env/assets/images/DownloadReleaseHHIT.jpg "Download Release HHIT") 
+
+![Download Zip HHIT](Python_env/assets/images/DownloadZipHHIT.jpg "Download Zip HHIT") 
 
 **2. Double-click "hurricane-hazard-import-tool.py".** If you don't have the Hazus Python Library installed, follow the prompt to install, then double-click "hurricane-hazard-import-tool.py" again. If you have an older version of the HHIT tool, follow the prompt to install, then double-click "hurricane-hazard-import-tool.py" again. If you have a much older version of the HHIT tool or the Hazus Python Library then during the install/update there may be many conflicts and Anaconda will try to resolve them, which can take a long time. If Anaconda is unable to resolve the conflicts, then it is best to use Anaconda to delete the 'hazus_env' environment and then install a fresh Hazus Python Library by double-clicking the "hurricane-hazard-import-tool.py". Please see the Troubleshooting section for step by step instructions.
 
