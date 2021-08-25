@@ -5,17 +5,17 @@ Launch the HHIT by double-clicking the "hurricane-hazard-import-tool.py" file in
 
 ## Requirements
 
-The HHIT requires Hazus, ArcGIS Desktop, Anaconda, and an active internet connection. Anaconda is software that automatically manages Python packages required to run Hazus open source tools, including the Hazus Python package.
+The HHIT requires Hazus, ArcGIS Desktop, conda, and an active internet connection. Conda is a free software package manager that automatically manages all Python packages required to run Hazus open source tools - including the Hazus Python package: https://fema-nhrap.s3.amazonaws.com/Hazus/Python/build/html/index.html - conda can be installed with Miniforge.
 
-1. Go to https://www.anaconda.com/distribution/
+1. Go to https://github.com/conda-forge/miniforge/#download
 
-2. Download Anaconda for Python 3
+2. Download Minforge3 for your operating system
 
 3. Complete the installation. During installation, make sure the following options are checked:
 
-   - [x] Add Anaconda to my PATH environment variable
-   - [x] Register Anaconda as my default Python
-   - [x] Install Anaconda for local user, rather than all users
+   - [x] Add conda to my PATH environment variable
+   - [x] Register conda as my default Python
+   - [x] Install conda for local user, rather than all users
 
 ## To Use
 

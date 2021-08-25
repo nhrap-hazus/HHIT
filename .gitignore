@@ -8,3 +8,6 @@ src/__pycache__/manage.cpython-37.pyc
 *.pyc
 *.pyc
 log/hhit.log
+
+# VSCode workspace
+*.code-workspace

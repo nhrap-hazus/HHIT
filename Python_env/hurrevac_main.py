@@ -11,7 +11,7 @@ from tkinter import messagebox as messagebox
 import pandas as pd
 import json
 import os
-from hazpy.legacy import common as hazpy_common
+from Python_env.hazpy.legacy import common as hazpy_common
 ##import logging
 ##import logging.config
 

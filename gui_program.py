@@ -24,8 +24,7 @@ except ImportError:
 
 try:
     '''Hurrevac supporting scripts'''
-    import hurrevac_main
-    import hurrevac_storms
+    from Python_env import hurrevac_main, hurrevac_storms
 except ImportError:
     print('Failed importing supporting Hurrevac scripts')
 
