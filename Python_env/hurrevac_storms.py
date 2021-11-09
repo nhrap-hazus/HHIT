@@ -5,15 +5,18 @@ Requirements: Python 3.7, Anaconda3 64bit
 @author: Colin Lindeman
 """
 
+import json
+#import logging
 import os
-from subprocess import call
-import socket
 import requests
+import socket
+from subprocess import call
+import time
 import tkinter as tk
 import tkinter.ttk as ttk
-import json
+
 from Python_env import hurrevac_storm
-##import logging
+
 
 try:
     with open("hurrevac_settings.json") as f:
@@ -90,24 +93,34 @@ class StormsInfo:
         self.GetStormsBasins()
     
     def GetStormsJSON(self):
-        """ Populates JSON variable with json storms data from Hurrevac url
+        """ Populates JSON variable with json storms data from Hurrevac url\
+        
+        Notes:
+            TODO the app crashes if no internet or the hurrevac hvx api website is down
         """
 ##        logging.debug("Running GetStormsJSON")
         manage = Manage()
         manage.handleProxy()
-        openUrl = requests.get(hurrevacSettings['HurrevacStormsURL'])
+        for attempt in range(3):
+            try:
+                openUrl = requests.get(hurrevacSettings['HurrevacStormsURL'], timeout=10)
+            except:
+                time.sleep(2)
+                continue
+            else:
+                break
+        else:
+            print("Error receiving data")
         if(openUrl.status_code == 200):
             stormsJSON = openUrl.json()
             self.JSON = stormsJSON
         else:
-            print("Error receiving data", openUrl.getcode())
-##            logging.error("Error receiving data", openUrl.getcode())
+            print(f"Error GetStormsJSON: {openUrl.status_code}")
             
     def GetStormsTypes(self):
         """ Populates the storm types dropdown
         """
 ##        logging.debug("Running GetStormsTypes")
-        #working with json
         StormTypes = hurrevacSettings['ShowStormTypes']
         StormTypesList = []
         for key in StormTypes.keys():
@@ -120,7 +133,6 @@ class StormsInfo:
         """ Populates the storm basins dropdown
         """
 ##        logging.debug("Running GetStormsBasins")
-        #working with json
         StormBasins = hurrevacSettings['BasinsDictionary']
         StormBasinsLabels = list(StormBasins.values())
         self.basins = tuple(StormBasinsLabels)
@@ -129,7 +141,6 @@ class StormsInfo:
         """ Populates the storm years dropdown
         """
 ##        logging.debug("Running GetStormsYears")
-        #working with json
         yearList = []
         for i in self.JSON:
             try:
@@ -139,11 +150,6 @@ class StormsInfo:
             yearList.append(year)
         yearList.sort(reverse=True)
         self.years = tuple(yearList)
-        
-    # def GetOptimizeStormTrack(self):
-    #     with open("hurrevac_settings.json") as f:
-    #         hurrevacSettings = json.load(f)
-    #     self.optimizeStormTrack = hurrevacSettings['OptimizeStormTrack']
     
     def GetStormNames(self, stormTypes, basinLabel, year):
         """ Acquires the names of storms from Hurrevac json data
@@ -164,7 +170,6 @@ class StormsInfo:
         '''Get basins code from label in settings.json'''
         StormBasins = hurrevacSettings['BasinsDictionary']
         basinCode = get_key(basinLabel, StormBasins)
-        #Note: working with json
         stormNameStatusIDList = []
         
         activeStormsDictList = []
@@ -257,27 +262,46 @@ class StormInfo:
 
         Keyword Arguments:
            StormId :string -- Hurrevac stormid
+
+        Notes: 
+            https://hvx.hurrevac.com/hvx-api/v1/advisories/storm/{stormidhere has storms and
+            empty json for simulated storms.
+            https://hvx.hurrevac.com/hvx-api/v1/sim/advisories/storm/{stormidhere} has simulated storms and
+            empty json for non-simulated storms.
         """
-##        logging.debug("Running GetStormJSON")
         self.Id = StormId
-        #from internet
-        #attribute and used as input to GetStormDataframe
-        url = hurrevacSettings['HurrevacStormURL'] + "/" + StormId
         manage = Manage()
         manage.handleProxy()
-        openUrl = requests.get(url)
-        if(openUrl.status_code == 200):
-            #Need to check if response is 200 but there is no data "[]", ie a non-valid stormid request.
-            stormJSON = openUrl.json()
-            if len(stormJSON) == 0:
-                popupmsg("StormID not found.")
-##                logging.warning("stormJSON length is 0, possible incorrect stormid")
+
+        url_list = []
+        url_list.append(hurrevacSettings['HurrevacActiveStormURL'] + StormId)
+        url_list.append(hurrevacSettings['HurrevacHistoricStormURL'] + StormId)
+        url_list.append(hurrevacSettings['HurrevacExerciseStormURL'] + StormId)
+        url_list.append(hurrevacSettings['HurrevacSimulatedStormURL'] + StormId)
+
+        url_list_unique = list(set(url_list))
+
+        url_valid_list = []
+        for url in url_list_unique:
+            openUrl = requests.get(url, timeout=10)
+            if(openUrl.status_code == 200):
+                url_valid_list.append(url)
+
+        if len(url_valid_list) > 0:
+            for url in url_valid_list:
+                openUrl = requests.get(url, timeout=10)
+                stormJSON = openUrl.json()
+                if len(stormJSON) > 0:
+                    self.JSON = stormJSON
+                    break
             else:
-                self.JSON = stormJSON
+                popupmsg("StormID not found.")
+                print(f"StormID data not found in {url_valid_list}")
+##              logging.warning("stormJSON length is 0, possible incorrect stormid")
         else:
             popupmsg("Error receiving data. Check settings.json url or site is down or changed.")
-            print("Error receiving data: %s" % openUrl.getcode())
-##            logging.error("Error receiving data: %s" % openUrl.getcode())
+            print("Error receiving data: %s" % openUrl.status_code)
+##          logging.error("Error receiving data: %s" % openUrl.status_code)
 
     def GetStormDataframe(self, stormJSON):
         """ Convert Hurrevac JSON of user's selected stormid into pandas dataframes using
@@ -287,8 +311,6 @@ class StormInfo:
            stormJSON : json
         """
 ##        logging.debug("Running GetStormDataframe")
-        #from other python script
-        #attribute and used as input to ExportToJSON
         stormDataframes = hurrevac_storm.processStormJSON(stormJSON)
         self.huScenarioName = stormDataframes[0]
         self.huScenario = stormDataframes[1]
@@ -297,9 +319,6 @@ class StormInfo:
 #Test some of the code above...
 if __name__ == "__main__":
     myclass = StormsInfo()
-    # myclass.GetStormsJSON()
-    # myclass.GetStormsBasins()
-    # myclass.GetStormsYears()
     
     print("all possible types from config:", myclass.types)
     print()
@@ -316,11 +335,8 @@ if __name__ == "__main__":
     print("Eastern Pacific 2020 storm names:", myclass.GetStormNames(['Active', 'Historical', 'Exercise', 'Simulated'], 'Eastern Pacific', '2020'))
     print()
 
-    
     storm1 = StormInfo()
     storm1.GetStormJSON("al012020")
-    #print(storm1.Id)
-    #print(storm1.JSON)
     print(storm1.Id)
     storm1.GetStormDataframe(storm1.JSON)
     print(storm1.huScenario)
