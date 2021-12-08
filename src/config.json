@@ -44,9 +44,9 @@
     "httpTimeout": 5
   },
   "dev": {
-    "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-dev/hazpy/dev/hazpy/__init__.py",
-    "repoZipfileUrl": "https://github.com/nhrap-dev/HHIT/archive/refs/heads/dev.zip",
-    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-dev/HHIT/dev/src/__init__.py",
+    "hazpyInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/hazpy/dev/hazpy/__init__.py",
+    "repoZipfileUrl": "https://github.com/nhrap-hazus/HHIT/archive/refs/heads/dev.zip",
+    "toolInitUrl": "https://raw.githubusercontent.com/nhrap-hazus/HHIT/dev/src/__init__.py",
     "virtualEnvironment": "hazus_hhit_env",
     "condaChannel": "nhrap",
     "pythonPackage": "hazpy",
