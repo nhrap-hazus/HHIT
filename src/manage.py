@@ -208,7 +208,7 @@ class Manage:
                 u"HazPy",
                 0x1000 | 0x4,
             )
-            print(f'Exception updateTool: {e}')
+            print(e)
 
     def parseVersionFromInit(self, textBlob):
         """Parse tool version from src/__init__.py
@@ -330,4 +330,4 @@ class Manage:
                 if file_path.startswith(os.path.realpath(extract_path)):
                     zip_file.extract(member, extract_path)
         except Exception as e:
-            print(f'Exception safeZip: {e}')
+            print(e)
