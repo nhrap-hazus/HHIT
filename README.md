@@ -1,3 +1,5 @@
+# ATTENTION: The latest version of this tool is available at https://msc.fema.gov/portal/resources/hazus This github repository is no longer receiving updates.
+
 # Hurricane Hazard Import Tool (HHIT)
 The Hurricane Hazard Import Tool (HHIT) downloads, prepares, and imports Hurrevac hurricane data into a user's local Hazus database for hurricane loss modeling. Hurrevac is a storm tracking decision support tool jointly developed by the Federal Emergency Management Agency, the U.S. Army Corps of Engineers, and the National Oceanic and Atmospheric Administration. Hurrevac storm data include the location, direction, and speed of tropical storm winds for previous, current, and forecasted storm information produced by NOAA's National Hurricane Center advisories. Learn more about Hurrevac here: http://www.hurrevac.com/ 
 
